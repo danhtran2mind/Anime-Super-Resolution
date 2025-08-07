@@ -1,0 +1,3 @@
+- model_id: "danhtran2mind/Real-ESRGAN-Anime-finetuning"
+  local_dir: "ckpts/Real-ESRGAN-Anime-finetuning"
+  platform: "HuggingFace"

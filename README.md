@@ -1,1 +1,1 @@
-# Anime-Super-Resolution
+# Anime Super Resolution 🖼️
