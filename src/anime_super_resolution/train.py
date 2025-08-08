@@ -4,7 +4,7 @@ import subprocess
 import argparse
 
 # Append the Real-ESRGAN directory to sys.path
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'third_party', 'Real-ESRGAN'))
 
 def train(args):
     # Execute the Real-ESRGAN training command
