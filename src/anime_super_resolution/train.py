@@ -6,14 +6,14 @@ import argparse
 # Get the absolute path to the Real-ESRGAN directory
 real_esrgan_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'third_party', 'Real-ESRGAN'))
 
-# Append the Real-ESRGAN directory to sys.path if not already present
-if real_esrgan_dir not in sys.path:
-    sys.path.insert(0, real_esrgan_dir)
-
 def train(args):
     # Ensure the config file exists
     if not os.path.exists(args.config):
         raise FileNotFoundError(f"Configuration file {args.config} not found")
+
+    # Set up environment for subprocess
+    env = os.environ.copy()
+    env['PYTHONPATH'] = f"{real_esrgan_dir}{os.pathsep}{env.get('PYTHONPATH', '')}"
 
     # Execute the Real-ESRGAN training command
     try:
@@ -22,7 +22,7 @@ def train(args):
             os.path.join(real_esrgan_dir, 'realesrgan', 'train.py'),
             '-opt', args.config,
             '--auto_resume'
-        ], check=True)  # Raise an exception if the command fails
+        ], env=env, check=True)  # Pass the modified environment
     except subprocess.CalledProcessError as e:
         print(f"Training failed with error: {e}")
         sys.exit(1)
