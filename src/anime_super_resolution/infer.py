@@ -1,39 +1,28 @@
 # this file is src\anime_super_resolution\infer.py
 
-# sys append to src\anime_super_resolution\third_party\Real-ESRGAN
-
-# cmd = f"python inference_realesrgan.py -n {model_name} -i {input_path} -o {output_dir} --ext {ext} --outscale {outscale} --model_path {model_path}"
-
-# run cmd
-# input_img_path = "tests/test_data/input.jpg"
-# my_fintune_demo_path = "tests/test_data/output.jpg"
-# model_name="RealESRGAN_x4plus",
-# input_path=input_img_path,
-# output_dir=my_fintune_demo_path,
-# outscale=2,
-# ext="auto",
-# model_path="./ckpts/Real-ESRGAN-Anime-finetuning/net_g_latest.pth"
-
 import sys
 import os
 import subprocess
 import argparse
 
 # Append the Real-ESRGAN directory to sys.path
-# sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'third_party', 'Real-ESRGAN'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'third_party', 'Real-ESRGAN'))
 
 def infer(args):
-    third_party_project_dir = os.path.join("src", "third_party", "Real-ESRGAN")
+    # Construct the path to inference_realesrgan.py
+    third_party_project_dir = os.path.join(os.path.dirname(__file__), '..', 'third_party', 'Real-ESRGAN')
+    inference_script = os.path.join(third_party_project_dir, 'inference_realesrgan.py')
+
     # Construct the command using parsed arguments
     cmd = (
-        f"python {third_party_project_dir}/inference_realesrgan.py "
+        f"python \"{inference_script}\" "
         f"-n {args.model_name} "
-        f"-i {args.input_path} "
-        f"-o {args.output_dir} "
+        f"-i \"{args.input_path}\" "
+        f"-o \"{args.output_dir}\" "
         f"--suffix {args.suffix} "
         f"--ext {args.ext} "
         f"--outscale {args.outscale} "
-        f"--model_path {args.model_path}"
+        f"--model_path \"{args.model_path}\""
     )
 
     # Run the command

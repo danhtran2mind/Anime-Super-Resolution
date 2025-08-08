@@ -33,7 +33,7 @@ data/ 📁
 git clone https://github.com/danhtran2mind/Anime-Super-Resolution
 cd Anime-Super-Resolution
 ```
-!pip install -r requirements/requirements.txt
+!pip install -e .
 
 !python scripts/download_ckpts.py
 
