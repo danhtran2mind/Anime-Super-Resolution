@@ -28,7 +28,8 @@ def main():
     os.makedirs(args.src_path, exist_ok=True)
 
     # Clone Real-ESRGAN repository
-    subprocess.run(['git', 'clone', args.repo_url, args.clone_dir], check=True)
+    subprocess.run(['git', 'clone', args.repo_url,
+                    os.path.join(args.src_path, args.clone_dir)], check=True)
 
     # Copy realesrgan directory to third_party
     src_realesrgan = os.path.join(args.clone_dir, 'realesrgan')
