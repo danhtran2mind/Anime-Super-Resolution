@@ -10,7 +10,7 @@ def train(args):
     # Execute the Real-ESRGAN training command
     subprocess.run([
         'python',
-        os.path.join(os.path.dirname(__file__), '..', '..', 'third_party', 'Real-ESRGAN', 'realesrgan', 'train.py'),
+        os.path.join(os.path.dirname(__file__), '..', 'third_party', 'Real-ESRGAN', 'realesrgan', 'train.py'),
         '-opt', args.config,
         '--auto_resume'
     ])
