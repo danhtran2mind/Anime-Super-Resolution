@@ -1,0 +1,13 @@
+- model_id: "danhtran2mind/Real-ESRGAN-Anime-finetuning"
+  local_dir: "ckpts/Real-ESRGAN-Anime-finetuning"
+  platform: "HuggingFace"
+
+- model_id: "xinntao/Real-ESRGAN-x4plus-netD"
+  url: "https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.2.3/RealESRGAN_x4plus_netD.pth"
+  local_dir: "ckpts/Real-ESRGAN"
+  platform: "GitHub"
+
+- model_id: "xinntao/Real-ESRGAN-x4plus"
+  url: "https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN_x4plus.pth"
+  local_dir: "ckpts/Real-ESRGAN"
+  platform: "GitHub"

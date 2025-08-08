@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel", "pep517>=0.13.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "image-processing-project"
+version = "0.1.0"
+description = "A project for image processing with GFPGAN and related dependencies"
+requires-python = ">=3.8"
+dependencies = [
+    "basicsr==1.4.2",
+    "facexlib>=0.2.0",
+    "gfpgan>=1.3.8",
+    "numpy==1.26.4",
+    "opencv-python>=4.5.5",
+    "pillow>=9.0.0",
+    "tqdm>=4.64.0",
+    "lmdb>=1.3.0",
+    "pyyaml>=6.0",
+    "scipy>=1.7.3",
+    # torch and torchvision included below; use custom index for CUDA
+    "torch==2.0.1",
+    "torchvision==0.15.2",
+]
