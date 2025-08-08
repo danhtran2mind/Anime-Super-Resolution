@@ -39,7 +39,7 @@ datasets:
     name: DF2K+OST
     type: RealESRGANDataset
     dataroot_gt: './data'
-    meta_info: './data/meta_info/meta_info_amultiscale.txt'
+    meta_info: './data/meta_info/meta_info_multiscale.txt'
     io_backend:
       type: disk
 
