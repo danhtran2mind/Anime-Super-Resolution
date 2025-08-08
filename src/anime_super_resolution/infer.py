@@ -10,7 +10,7 @@ def infer(args):
     # Construct the command using parsed arguments
     cmd = [
         sys.executable,
-        os.path.join(os.path.dirname(__file__), '..', 'third_party', 'Real-ESRGAN', 'inference_realesrgan.py'),
+        os.path.join(os.path.dirname(__file__), 'src', 'third_party', 'Real-ESRGAN', 'inference_realesrgan.py'),
         '-n', args.model_name,
         '-i', args.input_path,
         '-o', args.output_dir,
