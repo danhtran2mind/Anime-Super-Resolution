@@ -51,7 +51,9 @@ cd Anime-Super-Resolution
 --meta_info "./data/meta_info/meta_info_multiscale.txt"
 
 ```
-python src/anime_super_resolution/train.py
+!python src/anime_super_resolution/train.py \
+    --config configs/Real-ESRGAN-Anime-finetuning.yml \
+    --auto_resume
 ```
 ```
 python src/anime_super_resolution/infer.py

@@ -33,7 +33,7 @@ def train(args):
 if __name__ == "__main__":
     # Parse command-line arguments
     parser = argparse.ArgumentParser(description='Run Real-ESRGAN training with specified config')
-    parser.add_argument('--config', type=str, default='configs/finetune_anime.yml', 
+    parser.add_argument('--config', type=str, default='configs/Real-ESRGAN-Anime-finetuning.yml', 
                         help='Path to the configuration YAML file')
     parser.add_argument('--auto_resume', action='store_true', 
                         help='Automatically resume training from the latest checkpoint')
