@@ -1,7 +1,8 @@
 # Anime Super Resolution 🖼️
 
+## Introduction
 
-
+## Key Features
 
 ## Dataset
 
@@ -26,41 +27,49 @@ data/ 📁
 └── meta_info/ 📁
     └── meta_info_multiscale.txt 📄
 ```
-
+[Real-ESRGAN Data Processing](#real-esrgan-data-processing)
+## Base Model
 
 
 ```bash
 git clone https://github.com/danhtran2mind/Anime-Super-Resolution
 cd Anime-Super-Resolution
 ```
-!pip install -e .
-
-!python scripts/download_ckpts.py
-
-!python scripts/setup_third_party.py
-
+```bash
+pip install -e .
+```
+```bash
+python scripts/download_ckpts.py
+```
+```bash
+python scripts/setup_third_party.py
+```
 ## Real-ESRGAN Data Processing
-
-!python src/third_party/Real-ESRGAN/scripts/generate_multiscale_DF2K.py \
+```bash
+python src/third_party/Real-ESRGAN/scripts/generate_multiscale_DF2K.py \
     --input ./data/anime-images-raw \
     --output ./data/anime-images-multiscale
-
-!python src/third_party/Real-ESRGAN/scripts/generate_meta_info.py \
+```
+```bash
+python src/third_party/Real-ESRGAN/scripts/generate_meta_info.py \
 --input ./data/anime-images-raw ./data/anime-images-multiscale \
 --root ./data ./data \
 --meta_info "./data/meta_info/meta_info_multiscale.txt"
-
 ```
-!python src/anime_super_resolution/train.py \
+## Training
+```bash
+python src/anime_super_resolution/train.py \
     --config configs/Real-ESRGAN-Anime-finetuning.yml \
     --auto_resume
 ```
-```
+
+## Inference
+
+```bash
 python src/anime_super_resolution/infer.py
 ```
-
-```
-!python src/anime_super_resolution/infer.py \
+```bash
+python src/anime_super_resolution/infer.py \
     --input_path tests/test_data/input_image.png \
     --output_dir tests/test_data \
     --suffix real_esrgan_anime \
