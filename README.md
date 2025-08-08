@@ -48,7 +48,7 @@ python src/anime_super_resolution/infer.py
 
 ```
 !python src/anime_super_resolution/infer.py \
-    --input_path ./data/anime-images-multiscale/frame_0001_14T3.png \
+    --input_path tests/test_data/input_image.png \
     --output_dir tests/test_data \
     --suffix real_esrgan_anime \
     --outscale 2 \
