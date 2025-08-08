@@ -99,10 +99,10 @@ network_d:
 # path
 path:
   # use the pre-trained Real-ESRNet model
-  pretrain_network_g: ./ckpts/RealESRGAN_x4plus.pth
+  pretrain_network_g: ./ckpts/Real-ESRGAN/RealESRGAN_x4plus.pth
   param_key_g: params_ema
   strict_load_g: true
-  pretrain_network_d: ./ckpts/RealESRGAN_x4plus_netD.pth
+  pretrain_network_d: ./ckpts/Real-ESRGAN/RealESRGAN_x4plus_netD.pth
   param_key_d: params
   strict_load_d: true
   resume_state: ~
