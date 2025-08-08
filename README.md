@@ -39,6 +39,17 @@ cd Anime-Super-Resolution
 
 !python scripts/setup_third_party.py
 
+## Real-ESRGAN Data Processing
+
+!python src/third_party/Real-ESRGAN/scripts/generate_multiscale_DF2K.py \
+    --input ./data/anime-images-raw \
+    --output ./data/anime-images-multiscale
+
+!python src/third_party/Real-ESRGAN/scripts/generate_meta_info.py \
+--input ./data/anime-images-raw ./data/anime-images-multiscale \
+--root ./data ./data \
+--meta_info "./data/meta_info/meta_info_multiscale.txt"
+
 ```
 python src/anime_super_resolution/train.py
 ```

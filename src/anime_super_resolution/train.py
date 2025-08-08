@@ -17,12 +17,15 @@ def train(args):
 
     # Execute the Real-ESRGAN training command
     try:
-        subprocess.run([
+        command = [
             sys.executable,  # Use the current Python executable
             os.path.join(real_esrgan_dir, 'realesrgan', 'train.py'),
-            '-opt', args.config,
-            '--auto_resume'
-        ], env=env, check=True)  # Pass the modified environment
+            '-opt', args.config
+        ]
+        if args.auto_resume:
+            command.append('--auto_resume')
+        
+        subprocess.run(command, env=env, check=True)  # Pass the modified environment
     except subprocess.CalledProcessError as e:
         print(f"Training failed with error: {e}")
         sys.exit(1)
@@ -32,6 +35,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Run Real-ESRGAN training with specified config')
     parser.add_argument('--config', type=str, default='configs/finetune_anime.yml', 
                         help='Path to the configuration YAML file')
+    parser.add_argument('--auto_resume', action='store_true', 
+                        help='Automatically resume training from the latest checkpoint')
     args = parser.parse_args()
 
     train(args)
