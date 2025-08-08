@@ -45,3 +45,12 @@ python src/anime_super_resolution/train.py
 ```
 python src/anime_super_resolution/infer.py
 ```
+
+```
+!python src/anime_super_resolution/infer.py \
+    --input_path ./data/anime-images-multiscale/frame_0001_14T3.png \
+    --output_dir tests/test_data \
+    --suffix real_esrgan_anime \
+    --outscale 2 \
+    --model_path ckpts/Real-ESRGAN-Anime-finetuning/net_g_latest.pth
+```
