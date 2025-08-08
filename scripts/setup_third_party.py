@@ -10,11 +10,10 @@ import subprocess
 import shutil
 import argparse
 
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 def main():
     parser = argparse.ArgumentParser(description="Setup third-party dependencies for anime super resolution")
-    parser.add_argument('--src_path', default=os.path.join('src', 'anime_super_resolution', 'third_party'),
+    parser.add_argument('--src_path', default=os.path.join('src', 'third_party'),
                       help='Path to append to sys.path and copy Real-ESRGAN to')
     parser.add_argument('--repo_url', default='https://github.com/danhtran2mind/Real-ESRGAN.git',
                       help='URL of the Real-ESRGAN repository to clone')
