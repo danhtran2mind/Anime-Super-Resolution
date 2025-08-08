@@ -20,12 +20,13 @@ import subprocess
 import argparse
 
 # Append the Real-ESRGAN directory to sys.path
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'third_party', 'Real-ESRGAN'))
+# sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'third_party', 'Real-ESRGAN'))
 
 def infer(args):
+    third_party_project_dir = os.path.join("src", "third_party", "Real-ESRGAN")
     # Construct the command using parsed arguments
     cmd = (
-        f"python inference_realesrgan.py "
+        f"python {third_party_project_dir}/inference_realesrgan.py "
         f"-n {args.model_name} "
         f"-i {args.input_path} "
         f"-o {args.output_dir} "

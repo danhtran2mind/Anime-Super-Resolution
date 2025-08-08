@@ -31,14 +31,14 @@ def main():
     subprocess.run(['git', 'clone', args.repo_url,
                     os.path.join(args.src_path, args.clone_dir)], check=True)
 
-    # Copy realesrgan directory to third_party
-    src_realesrgan = os.path.join(args.clone_dir, 'realesrgan')
-    dest_realesrgan = os.path.join(args.src_path, 'realesrgan')
+    # # Copy realesrgan directory to third_party
+    # src_realesrgan = os.path.join(args.clone_dir, 'realesrgan')
+    # dest_realesrgan = os.path.join(args.src_path, 'realesrgan')
     
-    if os.path.exists(src_realesrgan):
-        shutil.copytree(src_realesrgan, dest_realesrgan, dirs_exist_ok=True)
-    else:
-        raise FileNotFoundError(f"Directory {src_realesrgan} not found after cloning")
+    # if os.path.exists(src_realesrgan):
+    #     shutil.copytree(src_realesrgan, dest_realesrgan, dirs_exist_ok=True)
+    # else:
+    #     raise FileNotFoundError(f"Directory {src_realesrgan} not found after cloning")
 
 if __name__ == '__main__':
     main()
