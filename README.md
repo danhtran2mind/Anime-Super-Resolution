@@ -2,6 +2,7 @@
 
 
 
+
 ## Dataset
 
 ### Data Structure
@@ -24,4 +25,23 @@ data/ 📁
 │   └── ... 📸
 └── meta_info/ 📁
     └── meta_info_multiscale.txt 📄
+```
+
+
+
+```bash
+git clone https://github.com/danhtran2mind/Anime-Super-Resolution
+cd Anime-Super-Resolution
+```
+!pip install -r requirements/requirements.txt
+
+!python scripts/download_ckpts.py
+
+!python scripts/setup_third_party.py
+
+```
+python src/anime_super_resolution/train.py
+```
+```
+python src/anime_super_resolution/infer.py
 ```

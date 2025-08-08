@@ -10,6 +10,8 @@ import subprocess
 import shutil
 import argparse
 
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+
 def main():
     parser = argparse.ArgumentParser(description="Setup third-party dependencies for anime super resolution")
     parser.add_argument('--src_path', default=os.path.join('src', 'anime_super_resolution', 'third_party'),
