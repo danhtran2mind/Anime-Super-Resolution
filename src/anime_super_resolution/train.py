@@ -44,9 +44,9 @@ def train(args):
             
             # Move the entire source directory to target
             if os.path.exists(source_dir):
-                target_path = os.path.join(target_dir, experiment_name)
-                shutil.move(source_dir, target_path)
-                print(f"Moved experiment directory from {source_dir} to {target_path}")
+
+                shutil.move(source_dir, target_dir)
+                print(f"Moved experiment directory from {source_dir} to {args.output_model_dir}")
             else:
                 print(f"Warning: Source directory {source_dir} does not exist")
 
