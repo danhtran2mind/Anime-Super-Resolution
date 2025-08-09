@@ -102,12 +102,12 @@ with gr.Blocks(css=custom_css) as demo:
             
             # Load and display example inputs
             examples_data = load_examples()
-            gr.Examples(
-                examples=[[input_img, outer_scale] for input_img, _, outer_scale in examples_data],
-                inputs=[input_image, outer_scale],
-                label="Example Inputs",
-                examples_per_page=4
-            )
+            # gr.Examples(
+            #     examples=[[input_img, outer_scale] for input_img, _, outer_scale in examples_data],
+            #     inputs=[input_image, outer_scale],
+            #     label="Example Inputs",
+            #     examples_per_page=4
+            # )
             
             submit_button = gr.Button("Run Inference")
         
@@ -124,8 +124,8 @@ with gr.Blocks(css=custom_css) as demo:
     
     # Update input image, outer scale, and output image when an example is selected
     gr.Examples(
-        examples=[[input_img, outer_scale] for input_img, _, outer_scale in examples_data],
-        inputs=[input_image, outer_scale],
+        examples=[[input_img, output_img, outer_scale] for input_img, output_img, outer_scale in examples_data],
+        inputs=[input_image, output_image, outer_scale],
         label="Example Inputs",
         examples_per_page=4
     )
