@@ -2,6 +2,7 @@ import gradio as gr
 import os
 import sys
 import json
+from PIL import Image
 
 # Add the project root directory to the Python path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
@@ -32,8 +33,9 @@ def update_warning(outer_scale):
 
 def load_examples():
     """
-    Load example inputs from apps/assets/examples/Real-ESRGAN-Anime-finetuning/{1,2,3,4}.
-    Returns a list of lists: [input_image_path, outer_scale] for each example.
+    Load example inputs and outputs from apps/assets/examples/Real-ESRGAN-Anime-finetuning/{1,2,3,4}.
+    Reads input_file, output_file, and outer_scale from config.json.
+    Returns a list of lists: [input_image_data, output_image_data, outer_scale] for each example.
     """
     examples = []
     examples_base_path = os.path.join("apps", "assets", "examples", "Real-ESRGAN-Anime-finetuning")
@@ -41,13 +43,22 @@ def load_examples():
     for folder in ["1", "2", "3", "4"]:
         folder_path = os.path.join(examples_base_path, folder)
         config_path = os.path.join(folder_path, "config.json")
-        input_image_path = os.path.join(folder_path, "input.jpg")
         
-        if os.path.exists(input_image_path) and os.path.exists(config_path):
+        if os.path.exists(config_path):
             with open(config_path, 'r') as f:
                 config = json.load(f)
+                input_filename = config.get("input_file", "input.jpg")
+                output_filename = config.get("output_file", "output.jpg")
                 outer_scale = config.get("outer_scale", 4)  # Default to 4 if not specified
-            examples.append([input_image_path, outer_scale])
+                
+                input_image_path = os.path.join(folder_path, input_filename)
+                output_image_path = os.path.join(folder_path, output_filename)
+                
+                if os.path.exists(input_image_path) and os.path.exists(output_image_path):
+                    # Load images as PIL Image objects for Gradio
+                    input_image_data = Image.open(input_image_path)
+                    output_image_data = Image.open(output_image_path)
+                    examples.append([input_image_data, output_image_data, outer_scale])
     
     return examples
 
@@ -55,6 +66,25 @@ custom_css = open("apps/gradio_app/static/styles.css").read()
 # Define Gradio interface
 with gr.Blocks(css=custom_css) as demo:
     gr.Markdown("# Anime Image Super-Resolution with Real-ESRGAN")
+    
+    # Examples Gallery for Output Images
+    gr.Markdown("## Example Results")
+    gr.Markdown("Below are example input and output images. Click an input image in the 'Example Inputs' section to load it for inference.")
+    examples_data = load_examples()
+    example_items = []
+    for input_img, output_img, outer_scale in examples_data:
+        example_items.extend([
+            (input_img, f"Input (Outer Scale: {outer_scale})"),
+            (output_img, f"Output (Outer Scale: {outer_scale})")
+        ])
+    gr.Gallery(
+        value=example_items,
+        columns=4,
+        height="auto",
+        label="Example Input and Output Images",
+        preview=True,
+        allow_preview=True
+    )
     
     with gr.Row():
         with gr.Column():
@@ -78,10 +108,9 @@ with gr.Blocks(css=custom_css) as demo:
                 "Please ensure `Outer Scale` is greater than or equal to `Inner Scale` (default: 4)."
             )
             
-            # Load and display examples
-            examples_data = load_examples()
+            # Load and display example inputs
             gr.Examples(
-                examples=examples_data,
+                examples=[[input_img, outer_scale] for input_img, _, outer_scale in examples_data],
                 inputs=[input_image, outer_scale],
                 label="Example Inputs",
                 examples_per_page=4
