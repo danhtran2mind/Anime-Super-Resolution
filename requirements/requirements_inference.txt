@@ -1,0 +1,7 @@
+numpy
+opencv-python
+Pillow
+torch>=2.6.0
+torchvision>=0.19.0
+tqdm
+huggingface-hub

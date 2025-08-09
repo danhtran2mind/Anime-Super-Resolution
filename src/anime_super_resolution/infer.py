@@ -1,70 +1,58 @@
-import sys
-import os
-import subprocess
 import argparse
+from inference.real_esrgan_inference import RealESRGAN
+from PIL import Image
+import numpy as np
+import torch
+import os
+import yaml
 
-# Append the Real-ESRGAN directory to sys.path
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'third_party', 'Real-ESRGAN'))
+def get_model_path(model_id, models_config):
+    try:
+        config_list = yaml.safe_load(models_config)
+    except yaml.YAMLError as e:
+        print(f"Error loading YAML: {e}")
+        exit(1)
+    # Find the specific model configuration
+    model_config = next((item for item in config_list if item['model_id'] == model_id), None)
+    if model_config is None:
+        print("Error: Model ID 'danhtran2mind/Real-ESRGAN-Anime-finetuning' not found in configuration.")
+        exit(1)
+    return model_config
 
-def infer(args):
-    # Construct the command using parsed arguments
-    cmd = [
-        sys.executable,
-        os.path.join(os.path.dirname(__file__), '..', 'third_party', 'Real-ESRGAN', 'inference_realesrgan.py'),
-        '-n', args.model_name,
-        '-i', args.input_path,
-        '-o', args.output_dir,
-        '--suffix', args.suffix,
-        '--ext', args.ext,
-        '-s', str(args.outscale),
-        '--model_path', args.model_path
-    ]
+def infer(input_path, model_id, models_config, output_path=None):
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    scale = 4
+    model_config = get_model_path(model_id, models_config)
+    model = RealESRGAN(device, scale=scale)
+    model_path = os.path.join(model_config["local_dir"], model_config["filename"])
+    model.load_weights(model_path)
 
-    # Add optional arguments if specified
-    if args.denoise_strength is not None:
-        cmd.extend(['-dn', str(args.denoise_strength)])
-    if args.tile is not None:
-        cmd.extend(['-t', str(args.tile)])
-    if args.tile_pad is not None:
-        cmd.extend(['--tile_pad', str(args.tile_pad)])
-    if args.pre_pad is not None:
-        cmd.extend(['--pre_pad', str(args.pre_pad)])
-    if args.face_enhance:
-        cmd.append('--face_enhance')
-    if args.fp32:
-        cmd.append('--fp32')
-    if args.alpha_upsampler is not None:
-        cmd.extend(['--alpha_upsampler', args.alpha_upsampler])
-    if args.gpu_id is not None:
-        cmd.extend(['-g', str(args.gpu_id)])
-
-    # Run the command
-    subprocess.run(cmd, check=True)
+    image = Image.open(input_path).convert('RGB')
+    
+    output_image = model.predict(image)
+    
+    if output_path:
+        output_image.save(output_path)
+    # else:
+    #     # If no output path is provided, create a default output path
+    #     output_path = input_path.rsplit('.', 1)[0] + '_out.png'
+    #     output_image.save(output_path)
+    
+    return output_image
 
 if __name__ == "__main__":
-    # Set up argument parser
-    parser = argparse.ArgumentParser(description='Run Real-ESRGAN inference for anime super-resolution')
-    parser.add_argument('--model_name', type=str, default='RealESRGAN_x4plus', 
-                        help='Name of the model to use: RealESRGAN_x4plus | RealESRNet_x4plus | RealESRGAN_x4plus_anime_6B | RealESRGAN_x2plus | realesr-animevideov3 | realesr-general-x4v3')
-    parser.add_argument('--input_path', type=str, default='tests/test_data/input.jpg', help='Path to input image or folder')
-    parser.add_argument('--output_dir', type=str, default='tests/test_data/output', help='Path to output directory')
-    parser.add_argument('--outscale', type=float, default=4, help='Output scale factor')
-    parser.add_argument('--ext', type=str, default='auto', help='Image extension. Options: auto | jpg | png')
-    parser.add_argument('--suffix', type=str, default='out', help='Suffix for output file name')
-    parser.add_argument('--model_path', type=str, default='./ckpts/Real-ESRGAN-Anime-finetuning/net_g_latest.pth', 
-                        help='Path to model checkpoint')
-    parser.add_argument('--denoise_strength', type=float, default=None, 
-                        help='Denoise strength (0 to 1). Only used for realesr-general-x4v3 model')
-    parser.add_argument('--tile', type=int, default=None, help='Tile size, 0 for no tile during testing')
-    parser.add_argument('--tile_pad', type=int, default=None, help='Tile padding')
-    parser.add_argument('--pre_pad', type=int, default=None, help='Pre padding size at each border')
-    parser.add_argument('--face_enhance', action='store_true', help='Use GFPGAN to enhance face')
-    parser.add_argument('--fp32', action='store_true', help='Use fp32 precision during inference')
-    parser.add_argument('--alpha_upsampler', type=str, default=None, 
-                        help='The upsampler for alpha channels. Options: realesrgan | bicubic')
-    parser.add_argument('--gpu_id', type=int, default=None, help='GPU device to use (e.g., 0,1,2 for multi-GPU)')
-
-    # Parse arguments
+    parser = argparse.ArgumentParser(description="Super-resolution for anime images using Real-ESRGAN")
+    parser.add_argument('--input_path', type=str, required=True, help="Path to the input image")
+    parser.add_argument('--output_path', type=str, default=None, help="Path to save the output image")
+    parser.add_argument('--model_id', type=str, required=True, help="Model ID for Real-ESRGAN")
+    parser.add_argument('--models_config', type=str, required=True, help="Path to the models configuration YAML file")
+    parser.add_argument('--batch_size', type=int, default=1, help="Batch size for inference (not used in this implementation)")
+    
     args = parser.parse_args()
-
-    infer(args)
+    
+    # Read the models_config file
+    with open(args.models_config, 'r') as file:
+        models_config = file.read()
+    
+    # Call infer with the correct arguments
+    infer(args.input_path, args.model_id, models_config, args.output_path)

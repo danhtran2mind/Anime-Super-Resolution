@@ -35,16 +35,22 @@ data/ 📁
 git clone https://github.com/danhtran2mind/Anime-Super-Resolution
 cd Anime-Super-Resolution
 ```
+### Install Dependencies (Training + Inference)
 ```bash
 pip install -e .
 ```
+### Install Dependencies for Inference only
+```bash
+pip install -r requirements/requirements_inference.txt
+```
+
 ```bash
 python scripts/download_ckpts.py
 ```
 ```bash
 python scripts/setup_third_party.py
 ```
-## Real-ESRGAN Data Processing
+## Real-ESRGAN Data Processing (for Training)
 ```bash
 python src/third_party/Real-ESRGAN/scripts/generate_multiscale_DF2K.py \
     --input ./data/anime-images-raw \
@@ -65,9 +71,9 @@ python src/anime_super_resolution/train.py \
 
 ## Inference
 
-```bash
+<!-- ```bash
 python src/anime_super_resolution/infer.py
-```
+``` -->
 ```bash
 python src/anime_super_resolution/infer.py \
     --input_path tests/test_data/input_image.png \
