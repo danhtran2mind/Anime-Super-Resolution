@@ -62,29 +62,21 @@ def load_examples():
     
     return examples
 
+def select_example(evt: gr.SelectData, examples_data):
+    """
+    When an example is selected, return the input image, outer scale, and corresponding output image.
+    """
+    example_index = evt.index
+    input_image_data, output_image_data, outer_scale = examples_data[example_index]
+    return input_image_data, outer_scale, output_image_data, f"Loaded example with Outer Scale: {outer_scale}"
+
 custom_css = open("apps/gradio_app/static/styles.css").read()
 # Define Gradio interface
 with gr.Blocks(css=custom_css) as demo:
     gr.Markdown("# Anime Image Super-Resolution with Real-ESRGAN")
     
-    # Examples Gallery for Output Images
-    gr.Markdown("## Example Results")
-    gr.Markdown("Below are example input and output images. Click an input image in the 'Example Inputs' section to load it for inference.")
-    examples_data = load_examples()
-    example_items = []
-    for input_img, output_img, outer_scale in examples_data:
-        example_items.extend([
-            (input_img, f"Input (Outer Scale: {outer_scale})"),
-            (output_img, f"Output (Outer Scale: {outer_scale})")
-        ])
-    gr.Gallery(
-        value=example_items,
-        columns=4,
-        height="auto",
-        label="Example Input and Output Images",
-        preview=True,
-        allow_preview=True
-    )
+    gr.Markdown("## Example Inputs")
+    gr.Markdown("Select an example below to load its input image and outer scale. The corresponding output image will appear under 'Output Image'.")
     
     with gr.Row():
         with gr.Column():
@@ -109,6 +101,7 @@ with gr.Blocks(css=custom_css) as demo:
             )
             
             # Load and display example inputs
+            examples_data = load_examples()
             gr.Examples(
                 examples=[[input_img, outer_scale] for input_img, _, outer_scale in examples_data],
                 inputs=[input_image, outer_scale],
@@ -127,6 +120,13 @@ with gr.Blocks(css=custom_css) as demo:
         fn=update_warning,
         inputs=outer_scale,
         outputs=warning_text
+    )
+    
+    # Update input image, outer scale, and output image when an example is selected
+    gr.Examples.select(
+        fn=select_example,
+        inputs=[gr.State(examples_data)],
+        outputs=[input_image, outer_scale, output_image, output_text]
     )
     
     submit_button.click(
