@@ -5,8 +5,9 @@ import numpy as np
 import torch
 import os
 import yaml
+from huggingface_hub import hf_hub_download
 
-def get_model_path(model_id, models_config):
+def get_model_checkpoint(model_id, models_config):
     try:
         config_list = yaml.safe_load(models_config)
     except yaml.YAMLError as e:
@@ -17,14 +18,20 @@ def get_model_path(model_id, models_config):
     if model_config is None:
         print("Error: Model ID 'danhtran2mind/Real-ESRGAN-Anime-finetuning' not found in configuration.")
         exit(1)
-    return model_config
+    model_path = os.path.join(model_config["local_dir"], model_config["filename"])
+    if not os.path.exists(model_path):
+        hf_hub_download(repo_id=model_config["model_id"],
+                        filename=model_config["filename"], 
+                        cache_dir=model_config["local_dir"])
+        
+        print('Weights downloaded to:', os.path.basename(model_path))
+    return model_path
 
 def infer(input_path, model_id, models_config, output_path=None):
     device = "cuda" if torch.cuda.is_available() else "cpu"
     scale = 4
-    model_config = get_model_path(model_id, models_config)
     model = RealESRGAN(device, scale=scale)
-    model_path = os.path.join(model_config["local_dir"], model_config["filename"])
+    model_path =  get_model_checkpoint(model_id, models_config)
     model.load_weights(model_path)
 
     image = Image.open(input_path).convert('RGB')
