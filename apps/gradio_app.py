@@ -124,11 +124,12 @@ with gr.Blocks(css=custom_css) as demo:
     
     # Update input image, outer scale, and output image when an example is selected
     gr.Examples(
-        fn=select_example,
-        inputs=[gr.State(examples_data)],
-        outputs=[input_image, outer_scale, output_image, output_text]
+        examples=[[input_img, outer_scale] for input_img, _, outer_scale in examples_data],
+        inputs=[input_image, outer_scale],
+        label="Example Inputs",
+        examples_per_page=4
     )
-    
+        
     submit_button.click(
         fn=run_inference,
         inputs=[input_image, model_id, outer_scale],
