@@ -82,7 +82,7 @@ with gr.Blocks(css=custom_css) as demo:
     gr.Markdown("Select an example below to load its input image and outer scale. The corresponding output image will appear under 'Output Image'.")
     
     with gr.Row():
-        with gr.Column():
+        with gr.Column(scale=2):
             input_image = gr.Image(
                 type="filepath",
                 label="Input Image",
@@ -112,7 +112,7 @@ with gr.Blocks(css=custom_css) as demo:
             
             submit_button = gr.Button("Run Inference")
         
-        with gr.Column():
+        with gr.Column(scale=3):
             output_image = gr.Image(
                 label="Output Image",
                 elem_classes="output-image"  # Apply CSS class for larger size
