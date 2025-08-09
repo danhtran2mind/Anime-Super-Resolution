@@ -489,4 +489,7 @@ a:hover { color: #C2410C; }
     text-align: center;
 }
 
-
+/* Dark Mode */
+@media (prefers-color-scheme: dark) {
+  body { @extend .dark; }
+}
