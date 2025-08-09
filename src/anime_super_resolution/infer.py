@@ -28,10 +28,10 @@ def get_model_checkpoint(model_id, models_config):
         print('Weights downloaded to:', model_path)
     return model_path
 
-def infer(input_path, model_id, models_config, output_path=None):
+def infer(input_path, model_id, models_config, outer_scale, inner_scale=4, output_path=None):
     device = "cuda" if torch.cuda.is_available() else "cpu"
-    scale = 4
-    model = RealESRGAN(device, scale=scale)
+
+    model = RealESRGAN(device, scale=inner_scale)
     model_path =  get_model_checkpoint(model_id, models_config)
     model.load_weights(model_path)
 
@@ -55,6 +55,8 @@ if __name__ == "__main__":
     parser.add_argument('--model_id', type=str, required=True, help="Model ID for Real-ESRGAN")
     parser.add_argument('--models_config', type=str, required=True, help="Path to the models configuration YAML file")
     parser.add_argument('--batch_size', type=int, default=1, help="Batch size for inference (not used in this implementation)")
+    parser.add_argument('--outer_scale', type=int, required=True, help="Outer scale for super-resolution")
+    parser.add_argument('--inner_scale', type=int, default=4, help="Inner scale for the model")
     
     args = parser.parse_args()
     
@@ -63,4 +65,5 @@ if __name__ == "__main__":
         models_config = file.read()
     
     # Call infer with the correct arguments
-    infer(args.input_path, args.model_id, models_config, args.output_path)
+    infer(args.input_path, args.model_id, models_config, 
+          args.outer_scale, args.inner_scale, args.output_path)
