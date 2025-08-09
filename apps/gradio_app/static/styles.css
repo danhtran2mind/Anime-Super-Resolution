@@ -493,3 +493,13 @@ a:hover { color: #C2410C; }
 @media (prefers-color-scheme: dark) {
   body { @extend .dark; }
 }
+/* Smaller size for input image */
+.input-image img {
+    max-width: 300px; 
+    height: auto;
+}
+/* Larger size for output image */
+.output-image img {
+    max-width: 500px; 
+    height: auto;
+}

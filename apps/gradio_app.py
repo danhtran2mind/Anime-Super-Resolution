@@ -72,16 +72,7 @@ def select_example(evt: gr.SelectData, examples_data):
     return input_image_data, outer_scale, output_image_data, f"Loaded example with Outer Scale: {outer_scale}"
 
 # Load custom CSS
-custom_css = """
-.input-image img {
-    max-width: 300px; /* Smaller size for input image */
-    height: auto;
-}
-.output-image img {
-    max-width: 500px; /* Larger size for output image */
-    height: auto;
-}
-"""
+custom_css = open("apps/gradio_app/static/styles.css").read()
 
 # Define Gradio interface
 with gr.Blocks(css=custom_css) as demo:
