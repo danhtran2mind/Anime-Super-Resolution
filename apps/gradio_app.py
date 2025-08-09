@@ -6,6 +6,7 @@ from PIL import Image
 
 # Add the project root directory to the Python path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from src.anime_super_resolution.infer import infer
 
 def run_inference(input_image, model_id, outer_scale):
@@ -70,7 +71,18 @@ def select_example(evt: gr.SelectData, examples_data):
     input_image_data, output_image_data, outer_scale = examples_data[example_index]
     return input_image_data, outer_scale, output_image_data, f"Loaded example with Outer Scale: {outer_scale}"
 
-custom_css = open("apps/gradio_app/static/styles.css").read()
+# Load custom CSS
+custom_css = """
+.input-image img {
+    max-width: 300px; /* Smaller size for input image */
+    height: auto;
+}
+.output-image img {
+    max-width: 500px; /* Larger size for output image */
+    height: auto;
+}
+"""
+
 # Define Gradio interface
 with gr.Blocks(css=custom_css) as demo:
     gr.Markdown("# Anime Image Super-Resolution with Real-ESRGAN")
@@ -80,7 +92,11 @@ with gr.Blocks(css=custom_css) as demo:
     
     with gr.Row():
         with gr.Column():
-            input_image = gr.Image(type="filepath", label="Input Image")
+            input_image = gr.Image(
+                type="filepath",
+                label="Input Image",
+                elem_classes="input-image"  # Apply CSS class for smaller size
+            )
             model_id = gr.Textbox(
                 label="Model ID",
                 value="danhtran2mind/Real-ESRGAN-Anime-finetuning"
@@ -100,19 +116,16 @@ with gr.Blocks(css=custom_css) as demo:
                 "Please ensure `Outer Scale` is greater than or equal to `Inner Scale` (default: 4)."
             )
             
-            # Load and display example inputs
+            # Load examples
             examples_data = load_examples()
-            # gr.Examples(
-            #     examples=[[input_img, outer_scale] for input_img, _, outer_scale in examples_data],
-            #     inputs=[input_image, outer_scale],
-            #     label="Example Inputs",
-            #     examples_per_page=4
-            # )
             
             submit_button = gr.Button("Run Inference")
         
         with gr.Column():
-            output_image = gr.Image(label="Output Image")
+            output_image = gr.Image(
+                label="Output Image",
+                elem_classes="output-image"  # Apply CSS class for larger size
+            )
             output_text = gr.Textbox(label="Status")
     
     # Update warning text when outer_scale changes
@@ -137,4 +150,4 @@ with gr.Blocks(css=custom_css) as demo:
     )
 
 if __name__ == "__main__":
-    demo.launch(share=True)
+    demo.launch(share=True)  # Changed to local launch for safety; use share=True for public URL if needed
