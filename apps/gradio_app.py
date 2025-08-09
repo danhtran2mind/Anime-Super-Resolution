@@ -1,62 +1,72 @@
 import gradio as gr
 import os
-import subprocess
-from pathlib import Path
-import tempfile
+from PIL import Image
+from src.anime_super_resolution.infer import infer
 
-def run_super_resolution(image, upscale_rate, model_path):
-    # Create temporary directories for input and output
-    temp_dir = Path(tempfile.mkdtemp())
-    input_path = temp_dir / "input_image.png"
-    output_dir = temp_dir / "output"
-    output_dir.mkdir(exist_ok=True)
+def run_inference(input_image, model_id, models_config_path, outer_scale, inner_scale):
+    if not input_image:
+        return None, "Please upload an image."
     
-    # Save uploaded image
-    image.save(str(input_path))
+    if not os.path.exists(models_config_path):
+        return None, f"Models configuration file not found at: {models_config_path}"
     
-    # Construct the command
-    command = [
-        "python", "src/anime_super_resolution/infer.py",
-        "--input_path", str(input_path),
-        "--output_dir", str(output_dir),
-        "--suffix", "real_esrgan_anime",
-        "--outscale", str(upscale_rate),
-        "--model_path", model_path
-    ]
+    with open(models_config_path, 'r') as file:
+        models_config = file.read()
     
-    # Run the inference command
     try:
-        result = subprocess.run(command, capture_output=True, text=True, check=True)
-        print(result.stdout)
+        # Run inference without specifying output_path
+        output_image = infer(
+            input_path=input_image,
+            model_id=model_id,
+            models_config=models_config,
+            outer_scale=outer_scale,
+            # inner_scale=inner_scale
+        )
         
-        # Find the output image
-        output_files = list(output_dir.glob("*real_esrgan_anime*.png"))
-        if output_files:
-            return str(output_files[0])
-        else:
-            return "Error: No output image found"
-            
-    except subprocess.CalledProcessError as e:
-        return f"Error: {e.stderr}"
+        return output_image, "Inference completed successfully!"
+    except Exception as e:
+        return None, f"Error during inference: {str(e)}"
 
-# Define model path options
-model_paths = [
-    "ckpts/Real-ESRGAN-Anime-finetuning/net_g_latest.pth",
-    # Add more model paths here if available
-]
-
-# Create Gradio interface
-iface = gr.Interface(
-    fn=run_super_resolution,
-    inputs=[
-        gr.Image(type="pil", label="Input Image"),
-        gr.Dropdown(choices=[2, 4, 8], label="Upscale Rate", value=2),
-        gr.Dropdown(choices=model_paths, label="Model Path", value=model_paths[0])
-    ],
-    outputs=gr.Image(type="filepath", label="Upscaled Image"),
-    title="Anime Super Resolution",
-    description="Upload an image and select parameters to upscale using Real-ESRGAN"
-)
+# Define Gradio interface
+with gr.Blocks() as demo:
+    gr.Markdown("# Anime Image Super-Resolution with Real-ESRGAN")
+    
+    with gr.Row():
+        with gr.Column():
+            input_image = gr.Image(type="filepath", label="Input Image")
+            model_id = gr.Textbox(
+                label="Model ID",
+                value="danhtran2mind/Real-ESRGAN-Anime-finetuning"
+            )
+            models_config_path = gr.Textbox(
+                label="Models Config Path",
+                value="path/to/your/models_config.yaml"
+            )
+            outer_scale = gr.Slider(
+                minimum=1,
+                maximum=16,
+                step=1,
+                value=4,
+                label="Outer Scale"
+            )
+            inner_scale = gr.Slider(
+                minimum=1,
+                maximum=4,
+                step=1,
+                value=4,
+                label="Inner Scale"
+            )
+            submit_button = gr.Button("Run Inference")
+        
+        with gr.Column():
+            output_image = gr.Image(label="Output Image")
+            output_text = gr.Textbox(label="Status")
+    
+    submit_button.click(
+        fn=run_inference,
+        inputs=[input_image, model_id, models_config_path, outer_scale, inner_scale],
+        outputs=[output_image, output_text]
+    )
 
 if __name__ == "__main__":
-    iface.launch()
+    demo.launch(share=True)
