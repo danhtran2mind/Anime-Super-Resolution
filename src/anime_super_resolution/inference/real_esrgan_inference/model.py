@@ -23,7 +23,7 @@ class RealESRGAN:
         )
         
     def load_weights(self, model_path):
-        if not os.path.exists(model_path) and download:
+        if not os.path.exists(model_path):
             cache_dir = os.path.dirname(model_path)
             local_filename = os.path.basename(model_path)
             # config_file_url = hf_hub_url(repo_id=config['repo_id'], filename=config['filename'])
