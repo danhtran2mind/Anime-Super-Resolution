@@ -23,7 +23,7 @@ def get_model_checkpoint(model_id, models_config):
     if not os.path.exists(model_path):
         hf_hub_download(repo_id=model_config["model_id"],
                         filename=model_config["filename"], 
-                        cache_dir=model_config["local_dir"],
+                        local_dir=model_config["local_dir"],
                         local_dir_use_symlinks=False)
         
         print('Weights downloaded to:', model_path)
