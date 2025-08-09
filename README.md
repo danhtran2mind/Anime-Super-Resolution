@@ -1,5 +1,7 @@
 # Anime Super Resolution 🖼️
 
+> https://github.com/ai-forever/Real-ESRGAN https://github.com/danhtran2mind/Real-ESRGAN-inference
+https://github.com/xinntao/Real-ESRGAN https://github.com/danhtran2mind/Real-ESRGAN 
 ## Introduction
 
 ## Key Features
@@ -29,7 +31,8 @@ data/ 📁
 ```
 [Real-ESRGAN Data Processing](#real-esrgan-data-processing)
 ## Base Model
-
+https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN_x4plus.pth
+https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.2.3/RealESRGAN_x4plus_netD.pth
 
 ```bash
 git clone https://github.com/danhtran2mind/Anime-Super-Resolution
@@ -82,3 +85,9 @@ python src/anime_super_resolution/infer.py \
     --outscale 2 \
     --model_path ckpts/Real-ESRGAN-Anime-finetuning/net_g_latest.pth
 ```
+
+
+https://github.com/ai-forever/Real-ESRGAN https://github.com/danhtran2mind/Real-ESRGAN-inference
+https://huggingface.co/ai-forever/Real-ESRGAN
+https://github.com/xinntao/Real-ESRGAN https://github.com/danhtran2mind/Real-ESRGAN 
+https://github.com/xinntao/Real-ESRGAN/releases

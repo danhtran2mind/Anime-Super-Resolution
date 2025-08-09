@@ -50,6 +50,7 @@ def infer(input_path, model_id, models_config, outer_scale, inner_scale=4, outpu
             interpolation = cv2.INTER_AREA
         output_image_np = cv2.resize(output_image_np, (new_width, new_height), interpolation=interpolation)
         output_image = Image.fromarray(output_image_np)
+        
     if output_path:
         output_image.save(output_path)
     # else:
