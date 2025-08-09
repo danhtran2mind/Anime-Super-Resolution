@@ -1,12 +1,17 @@
 import argparse
-from inference.real_esrgan_inference import RealESRGAN
 from PIL import Image
 import numpy as np
 import torch
 import os
+import sys
+
 import yaml
 from huggingface_hub import hf_hub_download
 import cv2
+
+# Add the project root directory to the Python path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__))))
+from inference.real_esrgan_inference import RealESRGAN
 
 def get_model_checkpoint(model_id, models_config):
     try:

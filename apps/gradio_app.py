@@ -6,7 +6,9 @@ import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from src.anime_super_resolution.infer import infer
 
-def run_inference(input_image, model_id, models_config_path, outer_scale, inner_scale):
+def run_inference(input_image, model_id, 
+                  models_config_path, 
+                  outer_scale, inner_scale):
     if not input_image:
         return None, "Please upload an image."
     
