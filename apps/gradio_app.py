@@ -123,7 +123,7 @@ with gr.Blocks(css=custom_css) as demo:
     )
     
     # Update input image, outer scale, and output image when an example is selected
-    gr.Examples.select(
+    gr.Examples(
         fn=select_example,
         inputs=[gr.State(examples_data)],
         outputs=[input_image, outer_scale, output_image, output_text]
