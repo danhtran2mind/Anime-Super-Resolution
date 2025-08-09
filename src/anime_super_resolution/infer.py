@@ -25,7 +25,7 @@ def get_model_checkpoint(model_id, models_config):
                         cache_dir=model_config["local_dir"],
                         local_dir_use_symlinks=False)
         
-        print('Weights downloaded to:', os.path.basename(model_path))
+        print('Weights downloaded to:', model_path)
     return model_path
 
 def infer(input_path, model_id, models_config, output_path=None):
