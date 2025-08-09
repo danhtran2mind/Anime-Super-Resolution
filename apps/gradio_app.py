@@ -26,11 +26,12 @@ def run_inference(input_image, model_id, outer_scale):
 
 def update_warning(outer_scale):
     if outer_scale > 4:
-        return '<span style="color:red">Warning: outer_scale > 4 may reduce output quality. Recommended range is (1, 4].</span>'
+        return '<span style="color:red">To ensure optimal output quality, please set the <code>Outer Scale</code> to a value of 4 or less. The suggested range is from 1 to 4.</span>'
     return ""
 
+custom_css = open("apps/gradio_app/static/styles.css").read()
 # Define Gradio interface
-with gr.Blocks() as demo:
+with gr.Blocks(css=custom_css) as demo:
     gr.Markdown("# Anime Image Super-Resolution with Real-ESRGAN")
     
     with gr.Row():
@@ -50,10 +51,12 @@ with gr.Blocks() as demo:
             )
             warning_text = gr.Markdown()
             gr.Markdown(
-                "**Note**: For best output quality, set `outer_scale` in the range (1, 4]. "
-                "Values greater than 4 may still work but are not recommended, as `outer_scale` "
-                "should be greater than or equal to `inner_scale` (default is 4)."
+                "**Note:** For optimal output quality, set `Outer Scale` to a value between 1 and 4. "
+                "Values greater than 4 are not recommended. "
+                "Please ensure `Outer Scale` is greater than or equal to `Inner Scale` (default: 4)."
+
             )
+            
             
             submit_button = gr.Button("Run Inference")
         
