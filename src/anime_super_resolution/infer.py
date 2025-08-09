@@ -6,6 +6,7 @@ import torch
 import os
 import yaml
 from huggingface_hub import hf_hub_download
+import cv2
 
 def get_model_checkpoint(model_id, models_config):
     try:
@@ -38,7 +39,17 @@ def infer(input_path, model_id, models_config, outer_scale, inner_scale=4, outpu
     image = Image.open(input_path).convert('RGB')
     
     output_image = model.predict(image)
-    
+    if outer_scale != inner_scale:
+        factor = outer_scale / inner_scale
+        output_image_np = np.array(output_image)
+        new_width = int(output_image.width * factor)
+        new_height = int(output_image.height * factor)
+        if factor > 1:
+            interpolation = cv2.INTER_CUBIC
+        else:
+            interpolation = cv2.INTER_AREA
+        output_image_np = cv2.resize(output_image_np, (new_width, new_height), interpolation=interpolation)
+        output_image = Image.fromarray(output_image_np)
     if output_path:
         output_image.save(output_path)
     # else:
