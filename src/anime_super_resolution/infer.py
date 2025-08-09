@@ -13,9 +13,9 @@ import cv2
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__))))
 from inference.real_esrgan_inference import RealESRGAN
 
-def get_model_checkpoint(model_id, models_config):
+def get_model_checkpoint(model_id, models_config_path):
     try:
-        config_list = yaml.safe_load(models_config)
+        config_list = yaml.safe_load(models_config_path)
     except yaml.YAMLError as e:
         print(f"Error loading YAML: {e}")
         exit(1)
@@ -34,11 +34,11 @@ def get_model_checkpoint(model_id, models_config):
         print('Weights downloaded to:', model_path)
     return model_path
 
-def infer(input_path, model_id, models_config, outer_scale, inner_scale=4, output_path=None):
+def infer(input_path, model_id, models_config_path, outer_scale, inner_scale=4, output_path=None):
     device = "cuda" if torch.cuda.is_available() else "cpu"
 
     model = RealESRGAN(device, scale=inner_scale)
-    model_path =  get_model_checkpoint(model_id, models_config)
+    model_path =  get_model_checkpoint(model_id, models_config_path)
     model.load_weights(model_path)
 
     image = Image.open(input_path).convert('RGB')
@@ -70,17 +70,17 @@ if __name__ == "__main__":
     parser.add_argument('--input_path', type=str, required=True, help="Path to the input image")
     parser.add_argument('--output_path', type=str, default=None, help="Path to save the output image")
     parser.add_argument('--model_id', type=str, required=True, help="Model ID for Real-ESRGAN")
-    parser.add_argument('--models_config', type=str, required=True, help="Path to the models configuration YAML file")
+    parser.add_argument('--models_config_path', type=str, required=True, help="Path to the models configuration YAML file")
     parser.add_argument('--batch_size', type=int, default=1, help="Batch size for inference (not used in this implementation)")
     parser.add_argument('--outer_scale', type=int, required=True, help="Outer scale for super-resolution")
     parser.add_argument('--inner_scale', type=int, default=4, help="Inner scale for the model")
     
     args = parser.parse_args()
     
-    # Read the models_config file
-    with open(args.models_config, 'r') as file:
-        models_config = file.read()
+    # # Read the models_config file
+    # with open(args.models_config_path, 'r') as file:
+    #     models_config_path = file.read()
     
     # Call infer with the correct arguments
-    infer(args.input_path, args.model_id, models_config, 
+    infer(args.input_path, args.model_id, args.models_config_path, 
           args.outer_scale, args.inner_scale, args.output_path)
