@@ -145,7 +145,7 @@ with gr.Blocks(css=custom_css) as demo:
                 value=4,
                 label="Outer Scale"
             )
-            warning_text = gr.Markdown(elem_id="warning-text")  # Assign elem_id for JavaScript targeting
+            warning_text = gr.HTML(elem_id="warning-text")  # Assign elem_id for JavaScript targeting
             gr.Markdown(
                 "**Note:** For optimal output quality, set `Outer Scale` to a value between 1 and 4. "
                 "Values greater than 4 are not recommended. "
