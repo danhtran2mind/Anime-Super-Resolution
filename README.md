@@ -1,15 +1,60 @@
 # Anime Super Resolution 🖼️
 
-> https://github.com/ai-forever/Real-ESRGAN https://github.com/danhtran2mind/Real-ESRGAN-inference
-https://github.com/xinntao/Real-ESRGAN https://github.com/danhtran2mind/Real-ESRGAN 
-## Introduction
+[![GitHub Stars](https://img.shields.io/github/stars/danhtran2mind/Anime-Super-Resolution?style=social&label=Repo%20Stars)](https://github.com/danhtran2mind/Anime-Super-Resolution/stargazers)
+![Badge](https://hitscounter.dev/api/hit?url=https%3A%2F%2Fgithub.com%2Fdanhtran2mind%2FAnime-Super-Resolution&label=Repo+Views&icon=github&color=%236f42c1&message=&style=social&tz=UTC)
 
-## Key Features
+
+[![huggingface-hub](https://img.shields.io/badge/huggingface--hub-blue.svg?logo=huggingface)](https://huggingface.co/docs/hub)
+[![torch](https://img.shields.io/badge/torch-blue.svg?logo=pytorch)](https://pytorch.org/)
+[![Pillow](https://img.shields.io/badge/Pillow-blue.svg)](https://pypi.org/project/pillow/)
+[![numpy](https://img.shields.io/badge/numpy-blue.svg?logo=numpy)](https://numpy.org/)
+[![torchvision](https://img.shields.io/badge/torchvision-blue.svg?logo=pytorch)](https://pytorch.org/vision/stable/index.html)
+[![diffusers](https://img.shields.io/badge/diffusers-blue.svg?logo=huggingface)](https://huggingface.co/docs/diffusers)
+[![gradio](https://img.shields.io/badge/gradio-blue.svg?logo=gradio)](https://gradio.app/)
+[![Built on Real-ESRGAN](https://img.shields.io/badge/Built%20on-xinntao%2FReal--ESRGAN-blue?style=flat&logo=github)](https://github.com/xinntao/Real-ESRGAN)
+[![Built on Real-ESRGAN](https://img.shields.io/badge/Built%20on-ai--forever%2FReal--ESRGAN-blue?style=flat&logo=github)](https://github.com/ai-forever/Real-ESRGAN)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+
+## Introduction 🌟
+
+Anime Super Resolution 🖼️ enhances anime-style images using a fine-tuned Real-ESRGAN model, optimized for clarity and detail. Built on the RealESRGAN_x4plus model, it leverages a private dataset of 27,052 high-resolution (1920x1080) anime frames 📸. The project offers tools for data processing, training, inference, and an interactive Gradio demo, accessible on platforms like Colab, Kaggle, and locally 🚀.
+
+## Key Features ✨
+
+-   **Anime-Specific Upscaling** 🎨: Fine-tuned Real-ESRGAN for high-quality anime image super-resolution.
+    
+-   **Large Anime Dataset** 📚: 27,052 high-res anime frames for robust training.
+    
+-   **Interactive Gradio Demo** 🖥️: Easy model testing via HuggingFace-hosted interface.
+    
+-   **Multi-Platform Support** 🌐: Runs on Colab, Kaggle, JupyterLab, and more.
+    
+-   **Data Processing Tools** 🛠️: Scripts for multiscale dataset creation and meta-info generation.
+    
+-   **Flexible Training/Inference** ⚙️: Customizable configurations for training and upscaling.
+    
+-   **Open-Source** 📖: MIT-licensed, built with PyTorch, NumPy, and Pillow.
+    
+-   **Local/Cloud Compatibility** ☁️: Supports local Gradio app and cloud-based execution.
+
+## Notebook
+This notebook provides a step-by-step guide to finetune the Real-ESRGAN model for enhancing anime-style images. It covers data preparation, model configuration, training, and evaluation, optimized for clarity and reproducibility.
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/danhtran2mind/Anime-Super-Resolution/blob/main/notebooks/anime-super-resolution.ipynb)
+[![Open in SageMaker](https://studiolab.sagemaker.aws/studiolab.svg)](https://studiolab.sagemaker.aws/import/github/danhtran2mind/Anime-Super-Resolution/blob/main/notebooks/anime-super-resolution.ipynb)
+[![Open in Deepnote](https://deepnote.com/buttons/launch-in-deepnote-small.svg)](https://deepnote.com/launch?url=https://github.com/danhtran2mind/Anime-Super-Resolution/blob/main/notebooks/anime-super-resolution.ipynb)
+[![JupyterLab](https://img.shields.io/badge/Launch-JupyterLab-orange?logo=Jupyter)](https://mybinder.org/v2/gh/danhtran2mind/Anime-Super-Resolution/main?filepath=notebooks/anime-super-resolution.ipynb)
+[![Open in Gradient](https://assets.paperspace.io/img/gradient-badge.svg)](https://console.paperspace.com/github/danhtran2mind/Anime-Super-Resolution/blob/main/notebooks/anime-super-resolution.ipynb)
+[![Open in Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/danhtran2mind/Anime-Super-Resolution/main)
+[![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://www.kaggle.com/notebooks/welcome?src=https%3A%2F%2Fgithub.com%2Fdanhtran2mind%2FAnime-Super-Resolution/blob/main/notebooks/anime-super-resolution.ipynb)
+[![View on GitHub](https://img.shields.io/badge/View%20on-GitHub-181717?logo=github)](https://github.com/danhtran2mind/Anime-Super-Resolution/blob/main/notebooks/anime-super-resolution.ipynb)
 
 ## Dataset
 ### Source
-### Data Structure
+The dataset is privately extracted from anime films, comprising 27,052 images with a resolution of 1920x1080. Please read at [Download Dataset](docs/scripts/download_dataset_doc.md) if you want to use this dataset.
 
+### Data Structure
+The Data Structure is
 ```markdown
 data/ 📁
 ├── anime-images-raw/ 📁
@@ -29,10 +74,13 @@ data/ 📁
 └── meta_info/ 📁
     └── meta_info_multiscale.txt 📄
 ```
-To continue, see at [Real-ESRGAN Data Processing](#real-esrgan-data-processing-for-training)
+To proceed with the topic, please consult the section on [Real-ESRGAN Data Processing](#real-esrgan-data-processing-for-training) for Training for comprehensive details and guidance.
+
 ## Base Model
-https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN_x4plus.pth
-https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.2.3/RealESRGAN_x4plus_netD.pth
+The Real-ESRGAN-Anime-finetuning model was developed by fine-tuning the pre-trained [![RealESRGAN_x4plus](https://img.shields.io/badge/GitHub%20Release-Real--ESRGAN%2FRealESRGAN_x4plus-blue?style=flat&logo=github)](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN_x4plus.pth) model, leveraging its robust foundation to enhance performance specifically for anime-style image super-resolution tasks.
+
+<!-- https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN_x4plus.pth
+https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.2.3/RealESRGAN_x4plus_netD.pth -->
 
 ## Demonstration
 
@@ -129,7 +177,6 @@ python src/anime_super_resolution/train.py \
 #### Additional Arguments
 For more details and available options, refer to the [Training Document](docs/training/training_doc.md).
 
-
 You can see [Real-ESRGAN Training](https://github.com/xinntao/Real-ESRGAN/blob/master/docs/Training.md), and 
 [BasicSR Training Options](https://github.com/danhtran2mind/BasicSR/blob/master/basicsr/utils/options.py) for more details.
 
@@ -169,7 +216,9 @@ SlimFace requires the following environment:
 
 - You can explore more Model Hubs at:
 
-    > HuggingFace Model Hub: [![ai-forever Real-ESRGAN Model](https://img.shields.io/badge/HuggingFace-ai--forever%2FReal--ESRGAN-yellow?style=flat&logo=hugggingface)](https://huggingface.co/ai-forever/Real-ESRGAN). Real-ESRGAN Model releases: [![Real-ESRGAN releases](https://img.shields.io/badge/GitHub-Real--ESRGAN%2Freleases-blue?style=flat&logo=github)](https://github.com/xinntao/Real-ESRGAN/releases)
+    > HuggingFace Model Hub: [![ai-forever Real-ESRGAN Model](https://img.shields.io/badge/HuggingFace-ai--forever%2FReal--ESRGAN-yellow?style=flat&logo=huggingface)](https://huggingface.co/ai-forever/Real-ESRGAN). Real-ESRGAN Model releases: [![Real-ESRGAN releases](https://img.shields.io/badge/GitHub-Real--ESRGAN%2Freleases-blue?style=flat&logo=github)](https://github.com/xinntao/Real-ESRGAN/releases). 
+    > You also download `Real-ESRGAN-Anime-finetuning` at [![Real-ESRGAN-Anime-finetuning Model](https://img.shields.io/badge/HuggingFace-danhtran2mind%2FReal--ESRGAN--Anime--finetuning-yellow?style=flat&logo=huggingface)](https://huggingface.co/danhtran2mind/Real-ESRGAN-Anime-finetuning)
+
 
 <!-- https://github.com/ai-forever/Real-ESRGAN https://github.com/danhtran2mind/Real-ESRGAN-inference
 https://huggingface.co/ai-forever/Real-ESRGAN
