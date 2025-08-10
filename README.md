@@ -204,7 +204,7 @@ python src/anime_super_resolution/infer.py \
     <th>Image</th>
   </tr>
   <tr>
-    <td rowspan="2" style="text-align: center;">Example 1</td>
+    <td rowspan="2" style="text-align: center;">Ex. 1</td>
     <td style="text-align: center;">Original Image</td>    
     <td style="text-align: center;">
         <img src="assets/examples/Real-ESRGAN-Anime-finetuning/1/1_zoom.png" alt="Example 1" height="600">
@@ -218,7 +218,7 @@ python src/anime_super_resolution/infer.py \
     </td>
   </tr>
   <tr>
-    <td rowspan="2" style="text-align: center;">Example 2</td>
+    <td rowspan="2" style="text-align: center;">Ex. 2</td>
     <td style="text-align: center;">Original Image</td>
     <td style="text-align: center;">
         <img src="assets/examples/Real-ESRGAN-Anime-finetuning/2/2_zoom.png" alt="Example 2" height="600">
@@ -232,7 +232,7 @@ python src/anime_super_resolution/infer.py \
     </td>
   </tr>
   <tr>
-    <td rowspan="2" style="text-align: center;">Example 3</td>
+    <td rowspan="2" style="text-align: center;">Ex. 3</td>
     <td style="text-align: center;">Original Image</td>
     <td style="text-align: center;">
         <img src="assets/examples/Real-ESRGAN-Anime-finetuning/3/3_zoom.png" alt="Example 2" height="600">
@@ -246,16 +246,16 @@ python src/anime_super_resolution/infer.py \
     </td>
   </tr>
   <tr>
-    <td rowspan="2" style="text-align: center;">Example 4</td>
-    <td style="text-align: center;">Original Image</td>
-    <td style="text-align: center;">
+    <td rowspan="2" style="text-align: left;">Ex. 4</td>
+    <td style="text-align: left;">Original Image</td>
+    <td style="text-align: left;">
         <img src="assets/examples/Real-ESRGAN-Anime-finetuning/4/4_zoom.png" alt="Example 2" height="600">
     </td>
     </td>
   </tr>
   <tr>
-    <td style="text-align: center;">Upscaled Image (8x)</td>
-    <td style="text-align: center;">
+    <td style="text-align: left;">Upscaled Image (8x)</td>
+    <td style="text-align: left;">
         <img src="assets/examples/Real-ESRGAN-Anime-finetuning/4/4_x8_zoom.png" alt="Example 2" height="600">
     </td>
   </tr>
