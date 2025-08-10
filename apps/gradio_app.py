@@ -158,6 +158,7 @@ console.log("Warning text:", warningText);
 
 # Define Gradio interface
 with gr.Blocks(css=custom_css) as demo:
+    gr.HTML(custom_js)
     gr.Markdown("# Anime Image Super-Resolution with Real-ESRGAN")
     
     gr.Markdown("## Example Inputs")
@@ -183,7 +184,7 @@ with gr.Blocks(css=custom_css) as demo:
                 label="Outer Scale"
             )
             # warning_text = gr.HTML(elem_id="warning-text")  # Using gr.HTML
-            warning_text = gr.HTML(value="<span>Test warning</span>", elem_id="warning-text")
+            warning_text = gr.HTML(elem_id="warning-text")
             gr.Markdown(
                 "**Note:** For optimal output quality, set `Outer Scale` to a value between 1 and 4. "
                 "Values greater than 4 are not recommended. "
@@ -202,9 +203,7 @@ with gr.Blocks(css=custom_css) as demo:
             )
             output_text = gr.Textbox(label="Status")
     
-    # Inject JavaScript
-    gr.HTML(custom_js)
-    
+
     # Update input image, outer scale, and output image when an example is selected
     gr.Examples(
         examples=[[input_img, output_img, outer_scale] for input_img, output_img, outer_scale in examples_data],
