@@ -15,14 +15,12 @@ def run_inference(input_image, model_id, outer_scale):
     
     models_config_path = "configs/model_ckpts.yaml"
     try:
-        # Run inference without specifying output_path
         output_image = infer(
             input_path=input_image,
             model_id=model_id,
             models_config=models_config_path,
             outer_scale=outer_scale,
         )
-        
         return output_image, "Inference completed successfully!"
     except Exception as e:
         return None, f"Error during inference: {str(e)}"
@@ -33,11 +31,6 @@ def update_warning(outer_scale):
     return ""
 
 def load_examples():
-    """
-    Load example inputs and outputs from apps/assets/examples/Real-ESRGAN-Anime-finetuning/{1,2,3,4}.
-    Reads input_file, output_file, and outer_scale from config.json.
-    Returns a list of lists: [input_image_data, output_image_data, outer_scale] for each example.
-    """
     examples = []
     examples_base_path = os.path.join("apps", "assets", "examples", "Real-ESRGAN-Anime-finetuning")
     
@@ -50,13 +43,12 @@ def load_examples():
                 config = json.load(f)
                 input_filename = config.get("input_file", "input.jpg")
                 output_filename = config.get("output_file", "output.jpg")
-                outer_scale = config.get("outer_scale", 4)  # Default to 4 if not specified
+                outer_scale = config.get("outer_scale", 4)
                 
                 input_image_path = os.path.join(folder_path, input_filename)
                 output_image_path = os.path.join(folder_path, output_filename)
                 
                 if os.path.exists(input_image_path) and os.path.exists(output_image_path):
-                    # Load images as PIL Image objects for Gradio
                     input_image_data = Image.open(input_image_path)
                     output_image_data = Image.open(output_image_path)
                     examples.append([input_image_data, output_image_data, outer_scale])
@@ -64,15 +56,34 @@ def load_examples():
     return examples
 
 def select_example(evt: gr.SelectData, examples_data):
-    """
-    When an example is selected, return the input image, outer scale, and corresponding output image.
-    """
     example_index = evt.index
     input_image_data, output_image_data, outer_scale = examples_data[example_index]
     return input_image_data, outer_scale, output_image_data, f"Loaded example with Outer Scale: {outer_scale}"
 
 # Load custom CSS
-custom_css = open("apps/gradio_app/static/styles.css").read()
+custom_css = open("apps/gradio_app/static/styles.css").read() if os.path.exists("apps/gradio_app/static/styles.css") else ""
+
+# JavaScript to handle outer_scale slider changes in the front end
+custom_js = """
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // Find the outer_scale slider (Gradio sliders are typically input[type=range])
+    const outerScaleSlider = document.querySelector('input[type="range"][aria-label="Outer Scale"]');
+    const warningText = document.querySelector('#warning-text');
+    
+    if (outerScaleSlider && warningText) {
+        outerScaleSlider.addEventListener('input', () => {
+            const value = parseInt(outerScaleSlider.value);
+            if (value > 4) {
+                warningText.style.display = 'block';
+            } else {
+                warningText.style.display = 'none';
+            }
+        });
+    }
+});
+</script>
+"""
 
 # Define Gradio interface
 with gr.Blocks(css=custom_css) as demo:
@@ -86,7 +97,7 @@ with gr.Blocks(css=custom_css) as demo:
             input_image = gr.Image(
                 type="filepath",
                 label="Input Image",
-                elem_classes="input-image"  # Apply CSS class for smaller size
+                elem_classes="input-image"
             )
             model_id = gr.Textbox(
                 label="Model ID",
@@ -100,14 +111,17 @@ with gr.Blocks(css=custom_css) as demo:
                 value=4,
                 label="Outer Scale"
             )
-            warning_text = gr.Markdown()
+            warning_text = gr.HTML(
+                '<div id="warning-text" style="color:red; display:none;">'
+                'To ensure optimal output quality, please set the <code>Outer Scale</code> to a value of 4 or less. '
+                'The suggested range is from 1 to 4.</div>' + custom_js
+            )
             gr.Markdown(
                 "**Note:** For optimal output quality, set `Outer Scale` to a value between 1 and 4. "
                 "Values greater than 4 are not recommended. "
                 "Please ensure `Outer Scale` is greater than or equal to `Inner Scale` (default: 4)."
             )
             
-            # Load examples
             examples_data = load_examples()
             
             submit_button = gr.Button("Run Inference")
@@ -115,11 +129,11 @@ with gr.Blocks(css=custom_css) as demo:
         with gr.Column(scale=3):
             output_image = gr.Image(
                 label="Output Image",
-                elem_classes="output-image"  # Apply CSS class for larger size
+                elem_classes="output-image"
             )
             output_text = gr.Textbox(label="Status")
     
-    # Update warning text when outer_scale changes
+    # Keep the server-side warning update for consistency
     outer_scale.change(
         fn=update_warning,
         inputs=outer_scale,
@@ -141,4 +155,4 @@ with gr.Blocks(css=custom_css) as demo:
     )
 
 if __name__ == "__main__":
-    demo.launch(share=True)  # Changed to local launch for safety; use share=True for public URL if needed
+    demo.launch(share=True)  # Local launch; use share=True for public URL if needed
