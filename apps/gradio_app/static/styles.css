@@ -503,3 +503,14 @@ a:hover { color: #C2410C; }
     max-width: 500px; 
     height: auto;
 }
+
+/* Add styling for warning message */
+.warning-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+    display: block;
+}
+#warning-text {
+    min-height: 20px; /* Ensure space for warning */
+}

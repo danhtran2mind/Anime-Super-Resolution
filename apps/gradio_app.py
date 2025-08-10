@@ -61,16 +61,26 @@ custom_css = open("apps/gradio_app/static/styles.css").read()
 # JavaScript to handle outer_scale change
 custom_js = """
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Find the outer_scale number input and range slider using specific selectors
-    const numberInput = document.querySelector('input[aria-label="number input for Outer Scale"][data-testid="number-input"]');
-    const rangeInput = document.querySelector('input[aria-label="range slider for Outer Scale"][id="range_id_0"]');
+function setupWarningListener() {
+    // More robust selectors for number input and range slider
+    const numberInput = document.querySelector('input[aria-label="number input for Outer Scale"][data-testid="number-input"]') ||
+                       document.querySelector('input[aria-label="number input for Outer Scale"]');
+    const rangeInput = document.querySelector('input[aria-label="range slider for Outer Scale"][id="range_id_0"]') ||
+                      document.querySelector('input[aria-label="range slider for Outer Scale"]') ||
+                      document.querySelector('input[type="range"][aria-label="range slider for Outer Scale"]');
     const warningText = document.querySelector('#warning-text');
+
+    // Debugging logs
+    console.log("Script loaded");
+    console.log("Number input:", numberInput);
+    console.log("Range input:", rangeInput);
+    console.log("Warning text:", warningText);
 
     // Function to update warning based on value
     function updateWarning(value) {
+        if (isNaN(value)) return; // Skip if value is invalid
         if (value > 4) {
-            warningText.innerHTML = '<span style="color:red">To ensure optimal output quality, please set the <code>Outer Scale</code> to a value of 4 or less. The suggested range is from 1 to 4.</span>';
+            warningText.innerHTML = '<span class="warning-message">To ensure optimal output quality, please set the <code>Outer Scale</code> to a value of 4 or less. The suggested range is from 1 to 4.</span>';
         } else {
             warningText.innerHTML = '';
         }
@@ -79,6 +89,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Add event listeners to both inputs if they exist
     if (numberInput && warningText) {
         numberInput.addEventListener('input', function() {
+            console.log("Number input changed:", numberInput.value);
             const value = parseInt(numberInput.value);
             updateWarning(value);
         });
@@ -86,11 +97,25 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (rangeInput && warningText) {
         rangeInput.addEventListener('input', function() {
+            console.log("Range input changed:", rangeInput.value);
             const value = parseInt(rangeInput.value);
             updateWarning(value);
         });
     }
+}
+
+// Run on DOMContentLoaded
+document.addEventListener('DOMContentLoaded', setupWarningListener);
+
+// Use MutationObserver to handle dynamic DOM changes
+const observer = new MutationObserver(function(mutations, observer) {
+    if (document.querySelector('input[aria-label="number input for Outer Scale"]') &&
+        document.querySelector('input[aria-label="range slider for Outer Scale"]')) {
+        setupWarningListener();
+        observer.disconnect(); // Stop observing once elements are found
+    }
 });
+observer.observe(document.body, { childList: true, subtree: true });
 </script>
 """
 
