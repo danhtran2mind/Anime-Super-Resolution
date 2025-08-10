@@ -29,6 +29,9 @@ def train(args):
             os.path.join(real_esrgan_dir, 'realesrgan', 'train.py'),
             '-opt', args.config
         ]
+        # Check if --auto_resume is in extra_args and warn if it is
+        if '--auto_resume' in args.extra_args:
+            print("Warning: '--auto_resume' may not be supported by realesrgan/train.py. Proceeding anyway.")
         # Add any additional arguments passed to the script
         if args.extra_args:
             command.extend(args.extra_args)
@@ -52,6 +55,7 @@ def train(args):
 
     except subprocess.CalledProcessError as e:
         print(f"Training failed with error: {e}")
+        print("This may be due to unrecognized arguments like '--auto_resume'. Check the valid arguments for realesrgan/train.py.")
         sys.exit(1)
     except Exception as e:
         print(f"Error moving directory: {e}")
