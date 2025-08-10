@@ -18,7 +18,7 @@ def run_inference(input_image, model_id, outer_scale):
         output_image = infer(
             input_path=input_image,
             model_id=model_id,
-            models_config_path=models_config_path,
+            models_config=models_config_path,
             outer_scale=outer_scale,
         )
         return output_image, "Inference completed successfully!"
@@ -55,8 +55,24 @@ def select_example(evt: gr.SelectData, examples_data):
     input_image_data, output_image_data, outer_scale = examples_data[example_index]
     return input_image_data, outer_scale, output_image_data, f"Loaded example with Outer Scale: {outer_scale}"
 
-# Load custom CSS
-custom_css = open("apps/gradio_app/static/styles.css").read()
+# Updated CSS with warning styling
+custom_css = """
+/* Existing styles from styles.css */
+{open("apps/gradio_app/static/styles.css").read()}
+
+/* Add styling for warning message */
+.warning-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+    display: block;
+}
+#warning-text {
+    min-height: 20px; /* Ensure space for warning */
+    display: block !important; /* Prevent hiding */
+    visibility: visible !important;
+}
+"""
 
 # JavaScript to handle outer_scale change
 custom_js = """
@@ -78,7 +94,11 @@ function setupWarningListener() {
 
     // Function to update warning based on value
     function updateWarning(value) {
-        if (isNaN(value)) return; // Skip if value is invalid
+        if (isNaN(value)) {
+            console.log("Invalid value:", value);
+            return; // Skip if value is invalid
+        }
+        console.log("Updating warning with value:", value);
         if (value > 4) {
             warningText.innerHTML = '<span class="warning-message">To ensure optimal output quality, please set the <code>Outer Scale</code> to a value of 4 or less. The suggested range is from 1 to 4.</span>';
         } else {
@@ -93,6 +113,10 @@ function setupWarningListener() {
             const value = parseInt(numberInput.value);
             updateWarning(value);
         });
+        // Trigger initial check
+        updateWarning(parseInt(numberInput.value));
+    } else {
+        console.log("Number input or warning text not found");
     }
 
     if (rangeInput && warningText) {
@@ -101,16 +125,25 @@ function setupWarningListener() {
             const value = parseInt(rangeInput.value);
             updateWarning(value);
         });
+        // Trigger initial check
+        updateWarning(parseInt(rangeInput.value));
+    } else {
+        console.log("Range input or warning text not found");
     }
 }
 
 // Run on DOMContentLoaded
-document.addEventListener('DOMContentLoaded', setupWarningListener);
+document.addEventListener('DOMContentLoaded', function() {
+    console.log("DOMContentLoaded fired");
+    setupWarningListener();
+});
 
 // Use MutationObserver to handle dynamic DOM changes
 const observer = new MutationObserver(function(mutations, observer) {
+    console.log("MutationObserver triggered");
     if (document.querySelector('input[aria-label="number input for Outer Scale"]') &&
-        document.querySelector('input[aria-label="range slider for Outer Scale"]')) {
+        document.querySelector('input[aria-label="range slider for Outer Scale"]') &&
+        document.querySelector('#warning-text')) {
         setupWarningListener();
         observer.disconnect(); // Stop observing once elements are found
     }
@@ -145,7 +178,7 @@ with gr.Blocks(css=custom_css) as demo:
                 value=4,
                 label="Outer Scale"
             )
-            warning_text = gr.HTML(elem_id="warning-text")  # Assign elem_id for JavaScript targeting
+            warning_text = gr.HTML(elem_id="warning-text")  # Using gr.HTML
             gr.Markdown(
                 "**Note:** For optimal output quality, set `Outer Scale` to a value between 1 and 4. "
                 "Values greater than 4 are not recommended. "
@@ -181,5 +214,7 @@ with gr.Blocks(css=custom_css) as demo:
         outputs=[output_image, output_text]
     )
 
+# if __name__ == "__main__":
+#     demo.launch()  # Changed to local launch for safety
 if __name__ == "__main__":
     demo.launch(share=True)  # Changed to local launch for safety
