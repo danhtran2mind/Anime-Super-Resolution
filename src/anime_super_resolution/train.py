@@ -29,8 +29,6 @@ def train(args):
             os.path.join(real_esrgan_dir, 'realesrgan', 'train.py'),
             '-opt', args.config
         ]
-        # if args.auto_resume:
-        #     command.append('--auto_resume')
         # Add any additional arguments passed to the script
         if args.extra_args:
             command.extend(args.extra_args)
@@ -64,12 +62,10 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Run Real-ESRGAN training with specified config')
     parser.add_argument('--config', type=str, default='configs/Real-ESRGAN-Anime-finetuning.yml', 
                         help='Path to the configuration YAML file')
-    # parser.add_argument('--auto_resume', action='store_true', 
-    #                     help='Automatically resume training from the latest checkpoint')
     parser.add_argument('--output_model_dir', type=str, default='ckpts', 
                         help='Path to move experiment directory after training')
     parser.add_argument('extra_args', nargs='*', 
-                        help='Additional arguments to pass to the Real-ESRGAN train.py script')
+                        help='Additional arguments to pass to the Real-ESRGAN train.py script (e.g., --auto_resume)')
     args = parser.parse_args()
 
     train(args)
