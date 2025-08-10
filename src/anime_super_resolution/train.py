@@ -31,6 +31,9 @@ def train(args):
         ]
         if args.auto_resume:
             command.append('--auto_resume')
+        # Add any additional arguments passed to the script
+        if args.extra_args:
+            command.extend(args.extra_args)
         
         subprocess.run(command, env=env, check=True)  # Pass the modified environment
 
@@ -44,7 +47,6 @@ def train(args):
             
             # Move the entire source directory to target
             if os.path.exists(source_dir):
-
                 shutil.move(source_dir, target_dir)
                 print(f"Moved experiment directory from {source_dir} to {args.output_model_dir}")
             else:
@@ -66,6 +68,8 @@ if __name__ == "__main__":
                         help='Automatically resume training from the latest checkpoint')
     parser.add_argument('--output_model_dir', type=str, default='ckpts', 
                         help='Path to move experiment directory after training')
+    parser.add_argument('extra_args', nargs='*', 
+                        help='Additional arguments to pass to the Real-ESRGAN train.py script')
     args = parser.parse_args()
 
     train(args)
