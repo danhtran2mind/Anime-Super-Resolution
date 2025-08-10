@@ -194,8 +194,77 @@ python src/anime_super_resolution/infer.py \
     --model_path ckpts/Real-ESRGAN-Anime-finetuning/net_g_latest.pth
 ```
 
+#### Inference Examples
+
+
+<table border="1">
+  <tr>
+    <th>Example</th>
+    <th>Image Type</th>
+    <th>Image</th>
+  </tr>
+  <tr>
+    <td rowspan="2" style="text-align: center;">Example 1</td>
+    <td style="text-align: center;">Original Image</td>    
+    <td style="text-align: center;">
+        <img src="assets/examples/Real-ESRGAN-Anime-finetuning/1/1_zoom.png" alt="Example 1" height="600">
+    </td>
+  </tr>
+  <tr>
+    <!-- <td style="text-align: center;"></td> -->
+    <td style="text-align: center;">Upscaled Image (2x)</td>
+    <td style="text-align: center;">
+        <img src="assets/examples/Real-ESRGAN-Anime-finetuning/1/1_x2_zoom.png" alt="Example 1" height="600">
+    </td>
+  </tr>
+  <tr>
+    <td rowspan="2" style="text-align: center;">Example 2</td>
+    <td style="text-align: center;">Original Image</td>
+    <td style="text-align: center;">
+        <img src="assets/examples/Real-ESRGAN-Anime-finetuning/2/2_zoom.png" alt="Example 2" height="600">
+    </td>
+    </td>
+  </tr>
+  <tr>
+    <td style="text-align: center;">Upscaled Image (4x)</td>
+    <td style="text-align: center;">
+        <img src="assets/examples/Real-ESRGAN-Anime-finetuning/2/2_x4_zoom.png" alt="Example 2" height="600">
+    </td>
+  </tr>
+  <tr>
+    <td rowspan="2" style="text-align: center;">Example 3</td>
+    <td style="text-align: center;">Original Image</td>
+    <td style="text-align: center;">
+        <img src="assets/examples/Real-ESRGAN-Anime-finetuning/3/3_zoom.png" alt="Example 2" height="600">
+    </td>
+    </td>
+  </tr>
+  <tr>
+    <td style="text-align: center;">Upscaled Image (6x)</td>
+    <td style="text-align: center;">
+        <img src="assets/examples/Real-ESRGAN-Anime-finetuning/3/3_x6_zoom.png" alt="Example 2" height="600">
+    </td>
+  </tr>
+  <tr>
+    <td rowspan="2" style="text-align: center;">Example 4</td>
+    <td style="text-align: center;">Original Image</td>
+    <td style="text-align: center;">
+        <img src="assets/examples/Real-ESRGAN-Anime-finetuning/4/4_zoom.png" alt="Example 2" height="600">
+    </td>
+    </td>
+  </tr>
+  <tr>
+    <td style="text-align: center;">Upscaled Image (8x)</td>
+    <td style="text-align: center;">
+        <img src="assets/examples/Real-ESRGAN-Anime-finetuning/4/4_x8_zoom.png" alt="Example 2" height="600">
+    </td>
+  </tr>
+</table>
+
 #### Additional Arguments
 For more details and available options, refer to the [Inference Document](docs/inference/inference_doc.md).
+
+
 
 ## Environment
 
