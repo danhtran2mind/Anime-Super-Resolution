@@ -82,4 +82,4 @@ with gr.Blocks(css=custom_css) as demo:
     gr.Markdown(CONTENT_OUT_2)
 
 if __name__ == "__main__":
-    demo.launch(share=True)
+    demo.launch()
