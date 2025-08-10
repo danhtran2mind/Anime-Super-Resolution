@@ -59,22 +59,35 @@ def select_example(evt: gr.SelectData, examples_data):
 custom_css = open("apps/gradio_app/static/styles.css").read()
 
 # JavaScript to handle outer_scale change
-# JavaScript to handle outer_scale change
 custom_js = """
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Find the outer_scale number input by data-testid or aria-label
+    // Find the outer_scale number input and range slider
     const numberInput = document.querySelector('input[data-testid="number-input"]');
+    const rangeInput = document.querySelector('input[id="range_id_0"]');
     const warningText = document.querySelector('#warning-text');
 
+    // Function to update warning based on value
+    function updateWarning(value) {
+        if (value > 4) {
+            warningText.innerHTML = '<span style="color:red">To ensure optimal output quality, please set the <code>Outer Scale</code> to a value of 4 or less. The suggested range is from 1 to 4.</span>';
+        } else {
+            warningText.innerHTML = '';
+        }
+    }
+
+    // Add event listeners to both inputs if they exist
     if (numberInput && warningText) {
         numberInput.addEventListener('input', function() {
             const value = parseInt(numberInput.value);
-            if (value > 4) {
-                warningText.innerHTML = '<span style="color:red">To ensure optimal output quality, please set the <code>Outer Scale</code> to a value of 4 or less. The suggested range is from 1 to 4.</span>';
-            } else {
-                warningText.innerHTML = '';
-            }
+            updateWarning(value);
+        });
+    }
+
+    if (rangeInput && warningText) {
+        rangeInput.addEventListener('input', function() {
+            const value = parseInt(rangeInput.value);
+            updateWarning(value);
         });
     }
 });
