@@ -62,9 +62,9 @@ custom_css = open("apps/gradio_app/static/styles.css").read()
 custom_js = """
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Find the outer_scale number input and range slider
-    const numberInput = document.querySelector('input[data-testid="number-input"]');
-    const rangeInput = document.querySelector('input[id="range_id_0"]');
+    // Find the outer_scale number input and range slider using specific selectors
+    const numberInput = document.querySelector('input[aria-label="number input for Outer Scale"][data-testid="number-input"]');
+    const rangeInput = document.querySelector('input[aria-label="range slider for Outer Scale"][id="range_id_0"]');
     const warningText = document.querySelector('#warning-text');
 
     // Function to update warning based on value
