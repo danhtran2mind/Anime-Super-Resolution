@@ -25,10 +25,6 @@ def run_inference(input_image, model_id, outer_scale):
     except Exception as e:
         return None, f"Error during inference: {str(e)}"
 
-def update_warning(outer_scale):
-    if outer_scale > 4:
-        return '<span style="color:red">To ensure optimal output quality, please set the <code>Outer Scale</code> to a value of 4 or less. The suggested range is from 1 to 4.</span>'
-    return ""
 
 def load_examples():
     examples = []
@@ -67,18 +63,16 @@ custom_css = open("apps/gradio_app/static/styles.css").read() if os.path.exists(
 custom_js = """
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    // Find the outer_scale slider (Gradio sliders are typically input[type=range])
     const outerScaleSlider = document.querySelector('input[type="range"][aria-label="Outer Scale"]');
     const warningText = document.querySelector('#warning-text');
     
     if (outerScaleSlider && warningText) {
         outerScaleSlider.addEventListener('input', () => {
             const value = parseInt(outerScaleSlider.value);
-            if (value > 4) {
-                warningText.style.display = 'block';
-            } else {
-                warningText.style.display = 'none';
-            }
+            warningText.innerHTML = value > 4
+                ? '<span style="color:red">To ensure optimal output quality, please set the <code>Outer Scale</code> to a value of 4 or less. The suggested range is from 1 to 4.</span>'
+                : '';
+            warningText.style.display = value > 4 ? 'block' : 'none';
         });
     }
 });
@@ -112,9 +106,7 @@ with gr.Blocks(css=custom_css) as demo:
                 label="Outer Scale"
             )
             warning_text = gr.HTML(
-                '<div id="warning-text" style="color:red; display:none;">'
-                'To ensure optimal output quality, please set the <code>Outer Scale</code> to a value of 4 or less. '
-                'The suggested range is from 1 to 4.</div>' + custom_js
+                '<div id="warning-text" style="color:red; display:none;"></div>' + custom_js
             )
             gr.Markdown(
                 "**Note:** For optimal output quality, set `Outer Scale` to a value between 1 and 4. "
@@ -132,13 +124,6 @@ with gr.Blocks(css=custom_css) as demo:
                 elem_classes="output-image"
             )
             output_text = gr.Textbox(label="Status")
-    
-    # Keep the server-side warning update for consistency
-    # outer_scale.change(
-    #     fn=update_warning,
-    #     inputs=outer_scale,
-    #     outputs=warning_text
-    # )
     
     # Update input image, outer scale, and output image when an example is selected
     gr.Examples(
