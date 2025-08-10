@@ -63,11 +63,9 @@ if __name__ == "__main__":
     parser.add_argument('--config', type=str, default="configs/model_ckpts.yaml",
                         help="Path to the YAML configuration file")
     parser.add_argument('--full_ckpts', action='store_true',
-                        help="If true, download all models using snapshot_download, else just download models with for_inference in YAML")
+                        help="if true download all models using snapdownload, else just download model with for_inference in yaml")
     parser.add_argument('--include_base_model', action='store_true',
-                        help="If true, download all models (base_model true and false), else just download base_model false")
-    parser.add_argument('--base_model_only', action='store_true',
-                        help="If true, download only models with base_model true, ignoring for_inference")
+                        help="if true download all model base_model true and false, else just download base_model is false")
     args = parser.parse_args()
 
     # Load the YAML configuration
@@ -75,12 +73,8 @@ if __name__ == "__main__":
 
     # Iterate through models in the config
     for model_config in config:
-        if args.base_model_only:
-            if not model_config.get('base_model', False):
-                continue
-        else:
-            if not args.full_ckpts and not model_config.get('for_inference', False):
-                continue
-            if not args.include_base_model and model_config.get('base_model', False):
-                continue
+        if not args.full_ckpts and not model_config.get('for_inference', False):
+            continue
+        if not args.include_base_model and model_config.get('base_model', False):
+            continue
         download_model(model_config, full_ckpts=args.full_ckpts)

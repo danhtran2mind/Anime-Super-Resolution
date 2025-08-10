@@ -50,6 +50,9 @@ pip install -r requirements/requirements_inference.txt
 ```bash
 python scripts/download_ckpts.py
 ```
+python scripts/download_ckpts.py --base_model_only
+python scripts/download_ckpts.py --include_base_model
+python scripts/download_ckpts.py --full_ckpts
 ```bash
 python scripts/setup_third_party.py
 ```
