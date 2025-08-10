@@ -18,7 +18,7 @@ def run_inference(input_image, model_id, outer_scale):
         output_image = infer(
             input_path=input_image,
             model_id=model_id,
-            models_config=models_config_path,
+            models_config_path=models_config_path,
             outer_scale=outer_scale,
         )
         return output_image, "Inference completed successfully!"
@@ -55,109 +55,41 @@ def select_example(evt: gr.SelectData, examples_data):
     input_image_data, output_image_data, outer_scale = examples_data[example_index]
     return input_image_data, outer_scale, output_image_data, f"Loaded example with Outer Scale: {outer_scale}"
 
-# Updated CSS with warning styling
-custom_css = """
-/* Existing styles from styles.css */
-{open("apps/gradio_app/static/styles.css").read()}
+# Load custom CSS
+custom_css = open("apps/gradio_app/static/styles.css").read()
 
-/* Add styling for warning message */
-.warning-message {
-    color: red;
-    font-size: 14px;
-    margin-top: 5px;
-    display: block;
-}
-#warning-text {
-    min-height: 20px; /* Ensure space for warning */
-    display: block !important; /* Prevent hiding */
-    visibility: visible !important;
-}
-"""
-
-# JavaScript to handle outer_scale change
-custom_js = """
-function setupWarningListener() {
-    // More robust selectors for number input and range slider
-    const numberInput = document.querySelector('input[aria-label="number input for Outer Scale"][data-testid="number-input"]') ||
-                       document.querySelector('input[aria-label="number input for Outer Scale"]');
-    const rangeInput = document.querySelector('input[aria-label="range slider for Outer Scale"][id="range_id_0"]') ||
-                      document.querySelector('input[aria-label="range slider for Outer Scale"]') ||
-                      document.querySelector('input[type="range"][aria-label="range slider for Outer Scale"]');
-    const warningText = document.querySelector('#warning-text');
-
-    // Debugging logs
-    console.log("Script loaded");
-    console.log("Number input:", numberInput);
-    console.log("Range input:", rangeInput);
-    console.log("Warning text:", warningText);
-
-    // Function to update warning based on value
-    function updateWarning(value) {
-        if (isNaN(value)) {
-            console.log("Invalid value:", value);
-            return; // Skip if value is invalid
+# JavaScript function for client-side warning
+warning_js = """
+(value) => {
+    if (value > 4) {
+        // Show browser alert
+        alert('Warning: Outer Scale is set above 4. For optimal output quality, please set it to 4 or less.');
+        // Alternatively, create/update a warning div (uncomment to use)
+        /*
+        let warningDiv = document.getElementById('outer-scale-warning');
+        if (!warningDiv) {
+            warningDiv = document.createElement('div');
+            warningDiv.id = 'outer-scale-warning';
+            warningDiv.style.color = 'red';
+            warningDiv.style.fontWeight = 'bold';
+            warningDiv.style.marginTop = '10px';
+            document.querySelector('.gradio-container').appendChild(warningDiv);
         }
-        console.log("Updating warning with value:", value);
-        if (value > 4) {
-            warningText.innerHTML = '<span class="warning-message">To ensure optimal output quality, please set the <code>Outer Scale</code> to a value of 4 or less. The suggested range is from 1 to 4.</span>';
-        } else {
-            warningText.innerHTML = '';
+        warningDiv.innerText = 'Warning: Outer Scale is set above 4. For optimal output quality, please set it to 4 or less.';
+        */
+    } else {
+        // Remove warning div if it exists
+        const warningDiv = document.getElementById('outer-scale-warning');
+        if (warningDiv) {
+            warningDiv.remove();
         }
     }
-
-    // Add event listeners to both inputs if they exist
-    if (numberInput && warningText) {
-        numberInput.addEventListener('input', function() {
-            console.log("Number input changed:", numberInput.value);
-            const value = parseInt(numberInput.value);
-            updateWarning(value);
-        });
-        // Trigger initial check
-        updateWarning(parseInt(numberInput.value));
-    } else {
-        console.log("Number input or warning text not found");
-    }
-
-    if (rangeInput && warningText) {
-        rangeInput.addEventListener('input', function() {
-            console.log("Range input changed:", rangeInput.value);
-            const value = parseInt(rangeInput.value);
-            updateWarning(value);
-        });
-        // Trigger initial check
-        updateWarning(parseInt(rangeInput.value));
-    } else {
-        console.log("Range input or warning text not found");
-    }
+    return value; // Return the value to avoid affecting the slider
 }
-
-// Run on DOMContentLoaded
-document.addEventListener('DOMContentLoaded', function() {
-    console.log("DOMContentLoaded fired");
-    setupWarningListener();
-});
-
-// Use MutationObserver to handle dynamic DOM changes
-const observer = new MutationObserver(function(mutations, observer) {
-    console.log("MutationObserver triggered");
-    if (document.querySelector('input[aria-label="number input for Outer Scale"]') &&
-        document.querySelector('input[aria-label="range slider for Outer Scale"]') &&
-        document.querySelector('#warning-text')) {
-        setupWarningListener();
-        observer.disconnect(); // Stop observing once elements are found
-    }
-});
-observer.observe(document.body, { childList: true, subtree: true });
-console.log("Script loaded");
-console.log("Number input:", numberInput);
-console.log("Range input:", rangeInput);
-console.log("Warning text:", warningText);
-
 """
 
 # Define Gradio interface
-with gr.Blocks(css=custom_css, js=custom_js) as demo:
-    # gr.HTML(custom_js)
+with gr.Blocks(css=custom_css) as demo:
     gr.Markdown("# Anime Image Super-Resolution with Real-ESRGAN")
     
     gr.Markdown("## Example Inputs")
@@ -180,19 +112,17 @@ with gr.Blocks(css=custom_css, js=custom_js) as demo:
                 maximum=16,
                 step=1,
                 value=4,
-                label="Outer Scale"
+                label="Outer Scale",
+                elem_id="outer-scale-slider"  # Added elem_id for precise JS targeting
             )
-            # warning_text = gr.HTML(elem_id="warning-text")  # Using gr.HTML
-            warning_text = gr.HTML(elem_id="warning-text")
+            warning_text = gr.Markdown()  # Kept for layout consistency, but not updated by Python
             gr.Markdown(
                 "**Note:** For optimal output quality, set `Outer Scale` to a value between 1 and 4. "
                 "Values greater than 4 are not recommended. "
                 "Please ensure `Outer Scale` is greater than or equal to `Inner Scale` (default: 4)."
             )
             
-            # Load examples
             examples_data = load_examples()
-            
             submit_button = gr.Button("Run Inference")
         
         with gr.Column(scale=3):
@@ -202,8 +132,14 @@ with gr.Blocks(css=custom_css, js=custom_js) as demo:
             )
             output_text = gr.Textbox(label="Status")
     
-
-    # Update input image, outer scale, and output image when an example is selected
+    # Client-side warning when outer_scale changes
+    outer_scale.change(
+        fn=lambda x: x,  # Minimal Python function to pass the value through
+        inputs=outer_scale,
+        outputs=outer_scale,  # Return the value to maintain slider functionality
+        js=warning_js  # Execute client-side JavaScript
+    )
+    
     gr.Examples(
         examples=[[input_img, output_img, outer_scale] for input_img, output_img, outer_scale in examples_data],
         inputs=[input_image, output_image, outer_scale],
@@ -218,6 +154,6 @@ with gr.Blocks(css=custom_css, js=custom_js) as demo:
     )
 
 # if __name__ == "__main__":
-#     demo.launch()  # Changed to local launch for safety
+#     demo.launch()  # Local launch; use share=True for public URL if needed
 if __name__ == "__main__":
-    demo.launch(share=True)  # Changed to local launch for safety
+    demo.launch(share=True)  # Changed to local launch for safety; use share=True for public URL if needed
