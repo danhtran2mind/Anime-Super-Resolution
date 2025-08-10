@@ -76,7 +76,6 @@ custom_css = """
 
 # JavaScript to handle outer_scale change
 custom_js = """
-<script>
 function setupWarningListener() {
     // More robust selectors for number input and range slider
     const numberInput = document.querySelector('input[aria-label="number input for Outer Scale"][data-testid="number-input"]') ||
@@ -153,12 +152,12 @@ console.log("Script loaded");
 console.log("Number input:", numberInput);
 console.log("Range input:", rangeInput);
 console.log("Warning text:", warningText);
-</script>
+
 """
 
 # Define Gradio interface
-with gr.Blocks(css=custom_css) as demo:
-    gr.HTML(custom_js)
+with gr.Blocks(css=custom_css, js=custom_js) as demo:
+    # gr.HTML(custom_js)
     gr.Markdown("# Anime Image Super-Resolution with Real-ESRGAN")
     
     gr.Markdown("## Example Inputs")
