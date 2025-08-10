@@ -59,16 +59,17 @@ def select_example(evt: gr.SelectData, examples_data):
 custom_css = open("apps/gradio_app/static/styles.css").read()
 
 # JavaScript to handle outer_scale change
+# JavaScript to handle outer_scale change
 custom_js = """
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Find the outer_scale slider by its label or class
-    const slider = document.querySelector('input[type="range"]');
+    // Find the outer_scale number input by data-testid or aria-label
+    const numberInput = document.querySelector('input[data-testid="number-input"]');
     const warningText = document.querySelector('#warning-text');
 
-    if (slider && warningText) {
-        slider.addEventListener('input', function() {
-            const value = parseInt(slider.value);
+    if (numberInput && warningText) {
+        numberInput.addEventListener('input', function() {
+            const value = parseInt(numberInput.value);
             if (value > 4) {
                 warningText.innerHTML = '<span style="color:red">To ensure optimal output quality, please set the <code>Outer Scale</code> to a value of 4 or less. The suggested range is from 1 to 4.</span>';
             } else {
