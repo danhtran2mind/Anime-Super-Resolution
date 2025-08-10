@@ -7,7 +7,7 @@ from gradio_app.project_info import (
     CONTENT_OUT_1, CONTENT_OUT_2
 )
 from gradio_app.inference import run_inference
-# from gradio_app.examples import load_examples, select_example
+from gradio_app.examples import load_examples, select_example
 
 def run_setup_script():
     setup_script = os.path.join(os.path.dirname(__file__), "gradio_app", "setup_scripts.py")
@@ -72,14 +72,15 @@ def create_gui():
             js=outer_scale_warning
         )
 
-        # gr.Examples(
-        #     examples=[[input_img, output_img, outer_scale] for input_img, output_img, outer_scale in examples_data],
-        #     inputs=[input_image, outer_scale],
-        #     label="Example Inputs",
-        #     examples_per_page=4,
-        #     fn=select_example,
-        #     outputs=[input_image, outer_scale, output_image, output_text]
-        # )
+        gr.Examples(
+            examples=[[input_img, output_img, outer_scale] for input_img, output_img, outer_scale in examples_data],
+            inputs=[input_image, outer_scale],
+            label="Example Inputs",
+            examples_per_page=4,
+            cache_examples=False,
+            fn=select_example,
+            outputs=[input_image, outer_scale, output_image, output_text]
+        )
 
         submit_button.click(
             fn=run_inference,
