@@ -73,6 +73,8 @@ python src/anime_super_resolution/train.py \
 ```
 
 https://github.com/xinntao/Real-ESRGAN/blob/master/docs/Training.md
+https://github.com/danhtran2mind/BasicSR/blob/master/basicsr/utils/options.py
+
 [Training Document](docs/training/training_doc.md)
 
 ## Inference

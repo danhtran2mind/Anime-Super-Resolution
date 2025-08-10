@@ -29,12 +29,15 @@ def train(args):
             os.path.join(real_esrgan_dir, 'realesrgan', 'train.py'),
             '-opt', args.config
         ]
-        # Check if --auto_resume is in extra_args and warn if it is
-        if '--auto_resume' in args.extra_args:
-            print("Warning: '--auto_resume' may not be supported by realesrgan/train.py. Proceeding anyway.")
-        # Add any additional arguments passed to the script
-        if args.extra_args:
-            command.extend(args.extra_args)
+        if args.auto_resume:
+            command.append('--auto_resume')
+        if args.launcher != 'none':
+            command.append(f'--launcher={args.launcher}')
+        if args.debug:
+            command.append('--debug')
+        command.append(f'--local_rank={args.local_rank}')
+        if args.force_yml:
+            command.extend(['--force_yml'] + args.force_yml)
         
         subprocess.run(command, env=env, check=True)  # Pass the modified environment
 
@@ -55,7 +58,6 @@ def train(args):
 
     except subprocess.CalledProcessError as e:
         print(f"Training failed with error: {e}")
-        print("This may be due to unrecognized arguments like '--auto_resume'. Check the valid arguments for realesrgan/train.py.")
         sys.exit(1)
     except Exception as e:
         print(f"Error moving directory: {e}")
@@ -66,10 +68,16 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Run Real-ESRGAN training with specified config')
     parser.add_argument('--config', type=str, default='configs/Real-ESRGAN-Anime-finetuning.yml', 
                         help='Path to the configuration YAML file')
+    parser.add_argument('--launcher', choices=['none', 'pytorch', 'slurm'], default='none', 
+                        help='job launcher')
+    parser.add_argument('--auto_resume', action='store_true', 
+                        help='Automatically resume training from the latest checkpoint')
+    parser.add_argument('--debug', action='store_true')
+    parser.add_argument('--local_rank', type=int, default=0)
+    parser.add_argument('--force_yml', nargs='+', default=None, 
+                        help='Force to update yml files. Examples: train:ema_decay=0.999')
     parser.add_argument('--output_model_dir', type=str, default='ckpts', 
                         help='Path to move experiment directory after training')
-    parser.add_argument('extra_args', nargs='*', 
-                        help='Additional arguments to pass to the Real-ESRGAN train.py script (e.g., --auto_resume)')
     args = parser.parse_args()
 
     train(args)
