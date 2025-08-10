@@ -149,6 +149,10 @@ const observer = new MutationObserver(function(mutations, observer) {
     }
 });
 observer.observe(document.body, { childList: true, subtree: true });
+console.log("Script loaded");
+console.log("Number input:", numberInput);
+console.log("Range input:", rangeInput);
+console.log("Warning text:", warningText);
 </script>
 """
 
