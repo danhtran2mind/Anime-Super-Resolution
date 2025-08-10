@@ -9,20 +9,25 @@ from gradio_app.project_info import (
 from gradio_app.inference import run_inference
 from gradio_app.examples import load_examples, select_example
 
+
 def run_setup_script():
-    setup_script = os.path.join(os.path.dirname(__file__), "gradio_app", "setup_scripts.py")
+    setup_script = os.path.join(os.path.dirname(__file__),
+                                "gradio_app", "setup_scripts.py")
     try:
         result = subprocess.run(["python", setup_script], capture_output=True, text=True, check=True)
         return result.stdout
     except subprocess.CalledProcessError as e:
         print(f"Setup script failed with error: {e.stderr}")
         return f"Setup script failed: {e.stderr}"
-
+    
 def create_gui():
-    # Load CSS and JavaScript
-    custom_css = open(os.path.join(os.path.dirname(__file__), "gradio_app", "static", "styles.css")).read()
-    outer_scale_warning = open(os.path.join(os.path.dirname(__file__), "gradio_app", "static", "outer_scale_warning.js")).read()
+    # Load custom CSS
+    custom_css = open("apps/gradio_app/static/styles.css").read()
 
+    # JavaScript function to update warning_text Markdown component
+    outer_scale_warning = open("apps/gradio_app/static/outer_scale_warning.js").read()
+
+    # Define Gradio interface
     with gr.Blocks(css=custom_css) as demo:
         gr.Markdown("# Anime Super Resolution 🖼️")
         gr.Markdown(CONTENT_DESCRIPTION)
@@ -39,6 +44,7 @@ def create_gui():
                     label="Model ID",
                     value="danhtran2mind/Real-ESRGAN-Anime-finetuning"
                 )
+                
                 outer_scale = gr.Slider(
                     minimum=1,
                     maximum=8,
@@ -53,35 +59,35 @@ def create_gui():
                     "**Values greater than 4 are not recommended**. "
                     "Please ensure `Outer Scale` is greater than or equal to `Inner Scale` (default: 4)."
                 )
+                
                 examples_data = load_examples()
-                if not examples_data:
-                    gr.Warning("No examples found. Check the 'apps/assets/examples' directory.")
                 submit_button = gr.Button("Run Inference")
-
+            
             with gr.Column(scale=3):
                 output_image = gr.Image(
                     label="Output Image",
                     elem_classes="output-image"
                 )
                 output_text = gr.Textbox(label="Status")
-
+        
+        # Client-side warning update for warning_text
         outer_scale.change(
             fn=lambda x: x,
             inputs=outer_scale,
             outputs=outer_scale,
             js=outer_scale_warning
         )
-
+        
         gr.Examples(
             examples=[[input_img, output_img, outer_scale] for input_img, output_img, outer_scale in examples_data],
-            inputs=[input_image, outer_scale],
+            inputs=[input_image, output_image, outer_scale],
             label="Example Inputs",
             examples_per_page=4,
             cache_examples=False,
             fn=select_example,
             outputs=[input_image, outer_scale, output_image, output_text]
         )
-
+            
         submit_button.click(
             fn=run_inference,
             inputs=[input_image, model_id, outer_scale],
@@ -90,8 +96,8 @@ def create_gui():
         gr.HTML(CONTENT_OUT_1)
         gr.HTML(CONTENT_OUT_2)
 
-    return demo
-
+        return demo
+    
 if __name__ == "__main__":
     run_setup_script()
     demo = create_gui()
