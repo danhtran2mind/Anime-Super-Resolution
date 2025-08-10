@@ -15,13 +15,12 @@ from inference.real_esrgan_inference import RealESRGAN
 
 def get_model_checkpoint(model_id, models_config_path):
     try:
-        print("do it")
-        config_list = yaml.safe_load(models_config_path)
+        with open(models_config_path, 'r') as file:
+            config_list = yaml.safe_load(file)
     except yaml.YAMLError as e:
         print(f"Error loading YAML: {e}")
         exit(1)
-    print('models_config_path ', models_config_path)
-    print("config_list ", config_list)
+
     # Find the specific model configuration
     model_config = next((item for item in config_list if item['model_id'] == model_id), None)
     if model_config is None:
