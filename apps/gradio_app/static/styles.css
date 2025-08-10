@@ -514,3 +514,30 @@ a:hover { color: #C2410C; }
 #warning-text {
     min-height: 20px; /* Ensure space for warning */
 }
+/*Components for Gradio App*/
+.quote-container {
+    border-left: 5px solid #007bff;
+    padding-left: 15px;
+    margin-bottom: 15px;
+    font-style: italic;
+}
+.attribution p {
+    margin: 10px 0;
+}
+.badge {
+    display: inline-block;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+.badge:hover {
+    background-color: #0056b3;
+}
+.badge img {
+    vertical-align: middle;
+    margin-right: 5px;
+}
+.source {   
+    font-size: 14px;
+}

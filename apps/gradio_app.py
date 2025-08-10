@@ -4,6 +4,11 @@ import sys
 import json
 from PIL import Image
 
+from gradio_app.project_info import (
+    CONTENT_DESCRIPTION,
+    CONTENT_IN_1, CONTENT_IN_2,
+    CONTENT_OUT_1, CONTENT_OUT_2
+)
 # Add the project root directory to the Python path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
@@ -59,27 +64,14 @@ def select_example(evt: gr.SelectData, examples_data):
 custom_css = open("apps/gradio_app/static/styles.css").read()
 
 # JavaScript function to update warning_text Markdown component
-warning_js = """
-(value) => {
-    const warningElement = document.getElementById('warning-text');
-    if (warningElement) {
-        if (value > 4) {
-            warningElement.innerHTML = '<span style="color:red">To ensure optimal output quality, please set the <code>Outer Scale</code> to a value of 4 or less. The suggested range is from 1 to 4.</span>';
-        } else {
-            warningElement.innerHTML = '';
-        }
-    }
-    return value; // Return the value to maintain slider functionality
-}
-"""
+outer_scale_warning = open("apps/gradio_app/static/outer_scale_warning.js").read()
 
 # Define Gradio interface
 with gr.Blocks(css=custom_css) as demo:
-    gr.Markdown("# Anime Image Super-Resolution with Real-ESRGAN")
-    
-    gr.Markdown("## Example Inputs")
-    gr.Markdown("Select an example below to load its input image and outer scale. The corresponding output image will appear under 'Output Image'.")
-    
+    gr.Markdown("# Anime Super Resolution 🖼️")
+    gr.Markdown(CONTENT_DESCRIPTION)
+    gr.Markdown(CONTENT_IN_1)
+    gr.HTML(CONTENT_IN_2)
     with gr.Row():
         with gr.Column(scale=2):
             input_image = gr.Image(
@@ -100,7 +92,7 @@ with gr.Blocks(css=custom_css) as demo:
                 label="Outer Scale",
                 elem_id="outer-scale-slider"
             )
-            warning_text = gr.Markdown(elem_id="warning-text")  # Added elem_id for JS targeting
+            warning_text = gr.HTML(elem_id="warning-text")  # Added elem_id for JS targeting
             gr.Markdown(
                 "**Note:** For optimal output quality, set `Outer Scale` to a value between 1 and 4. "
                 "Values greater than 4 are not recommended. "
@@ -122,7 +114,7 @@ with gr.Blocks(css=custom_css) as demo:
         fn=lambda x: x,  # Pass-through function to satisfy Gradio
         inputs=outer_scale,
         outputs=outer_scale,  # Return value to maintain slider functionality
-        js=warning_js  # Update warning_text via JavaScript
+        js=outer_scale_warning  # Update warning_text via JavaScript
     )
     
     gr.Examples(
@@ -137,8 +129,8 @@ with gr.Blocks(css=custom_css) as demo:
         inputs=[input_image, model_id, outer_scale],
         outputs=[output_image, output_text]
     )
-
-# if __name__ == "__main__":
-#     demo.launch()  # Local launch; use share=True for public URL if needed
+    gr.HTML(CONTENT_OUT_1)
+    gr.Markdown(CONTENT_OUT_2)
+    
 if __name__ == "__main__":
     demo.launch(share=True)  # Changed to local launch for safety; use share=True for public URL if needed
