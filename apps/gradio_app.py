@@ -58,33 +58,18 @@ def select_example(evt: gr.SelectData, examples_data):
 # Load custom CSS
 custom_css = open("apps/gradio_app/static/styles.css").read()
 
-# JavaScript function for client-side warning
+# JavaScript function to update warning_text Markdown component
 warning_js = """
 (value) => {
-    if (value > 4) {
-        // Show browser alert
-        alert('Warning: Outer Scale is set above 4. For optimal output quality, please set it to 4 or less.');
-        // Alternatively, create/update a warning div (uncomment to use)
-        /*
-        let warningDiv = document.getElementById('outer-scale-warning');
-        if (!warningDiv) {
-            warningDiv = document.createElement('div');
-            warningDiv.id = 'outer-scale-warning';
-            warningDiv.style.color = 'red';
-            warningDiv.style.fontWeight = 'bold';
-            warningDiv.style.marginTop = '10px';
-            document.querySelector('.gradio-container').appendChild(warningDiv);
-        }
-        warningDiv.innerText = 'Warning: Outer Scale is set above 4. For optimal output quality, please set it to 4 or less.';
-        */
-    } else {
-        // Remove warning div if it exists
-        const warningDiv = document.getElementById('outer-scale-warning');
-        if (warningDiv) {
-            warningDiv.remove();
+    const warningElement = document.getElementById('warning-text');
+    if (warningElement) {
+        if (value > 4) {
+            warningElement.innerHTML = '<span style="color:red">To ensure optimal output quality, please set the <code>Outer Scale</code> to a value of 4 or less. The suggested range is from 1 to 4.</span>';
+        } else {
+            warningElement.innerHTML = '';
         }
     }
-    return value; // Return the value to avoid affecting the slider
+    return value; // Return the value to maintain slider functionality
 }
 """
 
@@ -113,9 +98,9 @@ with gr.Blocks(css=custom_css) as demo:
                 step=1,
                 value=4,
                 label="Outer Scale",
-                elem_id="outer-scale-slider"  # Added elem_id for precise JS targeting
+                elem_id="outer-scale-slider"
             )
-            warning_text = gr.Markdown()  # Kept for layout consistency, but not updated by Python
+            warning_text = gr.Markdown(elem_id="warning-text")  # Added elem_id for JS targeting
             gr.Markdown(
                 "**Note:** For optimal output quality, set `Outer Scale` to a value between 1 and 4. "
                 "Values greater than 4 are not recommended. "
@@ -132,12 +117,12 @@ with gr.Blocks(css=custom_css) as demo:
             )
             output_text = gr.Textbox(label="Status")
     
-    # Client-side warning when outer_scale changes
+    # Client-side warning update for warning_text
     outer_scale.change(
-        fn=lambda x: x,  # Minimal Python function to pass the value through
+        fn=lambda x: x,  # Pass-through function to satisfy Gradio
         inputs=outer_scale,
-        outputs=outer_scale,  # Return the value to maintain slider functionality
-        js=warning_js  # Execute client-side JavaScript
+        outputs=outer_scale,  # Return value to maintain slider functionality
+        js=warning_js  # Update warning_text via JavaScript
     )
     
     gr.Examples(
