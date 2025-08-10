@@ -1,0 +1,5 @@
+{
+    "input_file": "frame_0001_10T3.png",
+    "output_file": "frame_0001_10T3_real_esrgan_anime_x6.png",
+    "outer_scale": 6
+}

@@ -1,4 +1,4 @@
-# Download Dataset Script
+# Download Dataset
 
 ## Overview
 Python script to download a dataset from Hugging Face Hub and extract zip files using `huggingface_hub`.
