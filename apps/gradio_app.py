@@ -134,11 +134,11 @@ with gr.Blocks(css=custom_css) as demo:
             output_text = gr.Textbox(label="Status")
     
     # Keep the server-side warning update for consistency
-    outer_scale.change(
-        fn=update_warning,
-        inputs=outer_scale,
-        outputs=warning_text
-    )
+    # outer_scale.change(
+    #     fn=update_warning,
+    #     inputs=outer_scale,
+    #     outputs=warning_text
+    # )
     
     # Update input image, outer scale, and output image when an example is selected
     gr.Examples(
