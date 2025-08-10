@@ -72,6 +72,9 @@ python src/anime_super_resolution/train.py \
     --auto_resume
 ```
 
+https://github.com/xinntao/Real-ESRGAN/blob/master/docs/Training.md
+[Training Document](docs/training/training_doc.md)
+
 ## Inference
 
 <!-- ```bash
