@@ -18,7 +18,7 @@ def run_inference(input_image, model_id, outer_scale):
         output_image = infer(
             input_path=input_image,
             model_id=model_id,
-            models_config=models_config_path,
+            models_config_path=models_config_path,
             outer_scale=outer_scale,
         )
         return output_image, "Inference completed successfully!"
