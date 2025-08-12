@@ -11,11 +11,11 @@ CONTENT_IN_2 = """
     For more information, you can check out my GitHub repo:<br>
     Source code: 
     <a class="badge" href="https://github.com/danhtran2mind/Anime-Super-Resolution">
-        <img src="https://img.shields.io/badge/GitHub-danhtran2mind%2FAnime--Super--Resolution-blue?style=flat?logo=github" alt="GitHub Repo">
+        <img src="https://img.shields.io/badge/GitHub-danhtran2mind%2FAnime--Super--Resolution-blue?style=flat&logo=github" alt="GitHub Repo">
     </a>,
     Model Hub:
     <a class="badge" href="https://huggingface.co/danhtran2mind/Real-ESRGAN-Anime-finetuning">
-        <img src="https://img.shields.io/badge/HuggingFace-danhtran2mind%2FReal--ESRGAN--Anime--finetuning-yellow?style=flat?logo=huggingface" alt="HuggingFace Model">
+        <img src="https://img.shields.io/badge/HuggingFace-danhtran2mind%2FReal--ESRGAN--Anime--finetuning-yellow?style=flat&logo=huggingface" alt="HuggingFace Model">
     </a>.
 </p>
 """.strip()
@@ -59,7 +59,7 @@ You can explore more Model Hubs at:
     <p>
         HuggingFace Model Hub: 
         <a class="badge" href="https://huggingface.co/ai-forever/Real-ESRGAN">
-            <img src="https://img.shields.io/badge/HuggingFace-ai--forever%2FReal--ESRGAN-yellow?style=flat&logo=hugggingface" alt="ai-forever Real-ESRGAN Model">
+            <img src="https://img.shields.io/badge/HuggingFace-ai--forever%2FReal--ESRGAN-yellow?style=flat&logo=huggingface" alt="ai-forever Real-ESRGAN Model">
         </a>,
         Real-ESRGAN Model releases: 
         <a class="badge" href="https://github.com/xinntao/Real-ESRGAN/releases">
