@@ -115,7 +115,7 @@ pip install -e .
 ```bash
 pip install -r requirements/requirements_inference.txt
 ```
-### Execute Sripts
+### EScript-Driven Setup
 
 #### Download Model checkpoints
 
