@@ -541,3 +541,34 @@ a:hover { color: #C2410C; }
 .source {   
     font-size: 14px;
 }
+
+/* Start- Stop Buttons */
+.submit-btn {
+    background-color: #f97316; /* Green background */
+    color: white;
+    font-weight: bold;
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.submit-btn:hover {
+    background-color: #f97416de; /* Darker green on hover */
+}
+
+.stop-btn {
+    background-color: grey; /* Red background */
+    color: white;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.stop-btn:hover {
+    background-color: rgba(128, 128, 128, 0.858); /* Darker red on hover */
+}
