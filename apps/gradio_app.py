@@ -1,104 +1,187 @@
-import gradio as gr
 import os
 import subprocess
-from gradio_app.project_info import (
-    CONTENT_DESCRIPTION,
-    CONTENT_IN_1, CONTENT_IN_2,
-    CONTENT_OUT_1, CONTENT_OUT_2
-)
+import gradio as gr
+import random
 from gradio_app.inference import run_inference
 from gradio_app.examples import load_examples, select_example
-
+from gradio_app.project_info import (
+    NAME, 
+    CONTENT_DESCRIPTION, 
+    CONTENT_IN_1, 
+    CONTENT_OUT_1
+)
 
 def run_setup_script():
-    setup_script = os.path.join(os.path.dirname(__file__),
-                                "gradio_app", "setup_scripts.py")
+    setup_script = os.path.join(os.path.dirname(__file__), "gradio_app", "setup_scripts.py")
     try:
         result = subprocess.run(["python", setup_script], capture_output=True, text=True, check=True)
         return result.stdout
     except subprocess.CalledProcessError as e:
         print(f"Setup script failed with error: {e.stderr}")
         return f"Setup script failed: {e.stderr}"
-    
+
+def stop_app():
+    """Function to stop the Gradio app."""
+    try:
+        gr.Interface.close_all()  # Attempt to close all running Gradio interfaces
+        return "Application stopped successfully."
+    except Exception as e:
+        return f"Error stopping application: {str(e)}"
+
 def create_gui():
-    # Load custom CSS
-    custom_css = open("apps/gradio_app/static/styles.css").read()
+    try:
+        custom_css = open("apps/gradio_app/static/style.css").read()
+    except FileNotFoundError:
+        print("Error: style.css not found at gradio_app/static/style.css")
+        custom_css = ""  # Fallback to empty CSS if file is missing
 
-    # JavaScript function to update warning_text Markdown component
-    outer_scale_warning = open("apps/gradio_app/static/outer_scale_warning.js").read()
-
-    # Define Gradio interface
     with gr.Blocks(css=custom_css) as demo:
-        gr.Markdown("# Anime Super Resolution 🖼️")
-        gr.Markdown(CONTENT_DESCRIPTION)
-        gr.Markdown(CONTENT_IN_1)
-        gr.HTML(CONTENT_IN_2)
+        gr.Markdown(NAME)
+        gr.HTML(CONTENT_DESCRIPTION)
+        gr.HTML(CONTENT_IN_1)
+
         with gr.Row():
             with gr.Column(scale=2):
-                input_image = gr.Image(
-                    type="filepath",
-                    label="Input Image",
-                    elem_classes="input-image"
+                input_image = gr.Image(type="filepath", label="Input Image")
+                prompt = gr.Textbox(
+                    label="Prompt",
+                    value="a man is doing yoga"
                 )
-                model_id = gr.Textbox(
-                    label="Model ID",
-                    value="danhtran2mind/Real-ESRGAN-Anime-finetuning"
-                )
-                
-                outer_scale = gr.Slider(
-                    minimum=1,
-                    maximum=8,
-                    step=1,
-                    value=2,
-                    label="Outer Scale",
-                    elem_id="outer-scale-slider"
-                )
-                warning_text = gr.HTML(elem_id="warning-text")
-                gr.Markdown(
-                    "**Note:** For optimal output quality, set `Outer Scale` to a value between 1 and 4. "
-                    "**Values greater than 4 are not recommended**. "
-                    "Please ensure `Outer Scale` is greater than or equal to `Inner Scale` (default: 4)."
+                negative_prompt = gr.Textbox(
+                    label="Negative Prompt",
+                    value="monochrome, lowres, bad anatomy, worst quality, low quality"
                 )
                 
-                examples_data = load_examples()
-                submit_button = gr.Button("Run Inference")
-            
+                with gr.Row():
+                    width = gr.Slider(
+                        minimum=256,
+                        maximum=1024,
+                        value=512,
+                        step=64,
+                        label="Width"
+                    )
+                    height = gr.Slider(
+                        minimum=256,
+                        maximum=1024,
+                        value=512,
+                        step=64,
+                        label="Height"
+                    )
+                
+                with gr.Accordion("Advanced Settings", open=False):
+                    num_steps = gr.Slider(
+                        minimum=1,
+                        maximum=100,
+                        value=30,
+                        step=1,
+                        label="Number of Inference Steps"
+                    )
+                    use_random_seed = gr.Checkbox(label="Use Random Seed", value=False)
+                    seed = gr.Slider(
+                        minimum=0,
+                        maximum=2**32 - 1,
+                        value=42,
+                        step=1,
+                        label="Random Seed",
+                        visible=True
+                    )
+                    
+                    guidance_scale = gr.Slider(
+                        minimum=1.0,
+                        maximum=20.0,
+                        value=7.5,
+                        step=0.1,
+                        label="Guidance Scale"
+                    )
+                    controlnet_conditioning_scale = gr.Slider(
+                        minimum=0.0,
+                        maximum=1.0,
+                        value=1.0,
+                        step=0.1,
+                        label="ControlNet Conditioning Scale"
+                    )  
+                    
             with gr.Column(scale=3):
-                output_image = gr.Image(
-                    label="Output Image",
-                    elem_classes="output-image"
-                )
-                output_text = gr.Textbox(label="Status")
+                output_images = gr.Image(label="Generated Images")
+                output_message = gr.Textbox(label="Status")
+                
+                submit_button = gr.Button("Generate Images", elem_classes="submit-btn")
+                stop_button = gr.Button("Stop Application", elem_classes="stop-btn")
+
+        def update_seed_visibility(use_random):
+            return gr.update(visible=not use_random)
         
-        # Client-side warning update for warning_text
-        outer_scale.change(
-            fn=lambda x: x,
-            inputs=outer_scale,
-            outputs=outer_scale,
-            js=outer_scale_warning
+        use_random_seed.change(
+            fn=update_seed_visibility,
+            inputs=use_random_seed,
+            outputs=seed
         )
         
-        gr.Examples(
-            examples=[[input_img, output_img, outer_scale] for input_img, output_img, outer_scale in examples_data],
-            inputs=[input_image, output_image, outer_scale],
-            label="Example Inputs",
-            examples_per_page=4,
-            cache_examples=False,
+        # Load examples
+        examples_data = load_examples(os.path.join("apps", "gradio_app", 
+            "assets", "examples", "Stable-Diffusion-2.1-Openpose-ControlNet"))
+        examples_component = gr.Examples(
+            examples=examples_data,
+            inputs=[
+                input_image,
+                prompt,
+                negative_prompt,
+                output_images,
+                num_steps,
+                seed,
+                width,
+                height,
+                guidance_scale,
+                controlnet_conditioning_scale,
+                use_random_seed
+            ],
+            outputs=[
+                input_image,
+                prompt,
+                negative_prompt,
+                output_images,
+                num_steps,
+                seed,
+                width,
+                height,
+                guidance_scale,
+                controlnet_conditioning_scale,
+                use_random_seed,
+                output_message
+            ],
             fn=select_example,
-            outputs=[input_image, outer_scale, output_image, output_text]
+            cache_examples=False,
+            label="Examples: Yoga Poses"
         )
-            
+        
         submit_button.click(
             fn=run_inference,
-            inputs=[input_image, model_id, outer_scale],
-            outputs=[output_image, output_text]
+            inputs=[
+                input_image,
+                prompt,
+                negative_prompt,
+                num_steps,
+                seed,
+                width,
+                height,
+                guidance_scale,
+                controlnet_conditioning_scale,
+                use_random_seed,
+            ],
+            outputs=[output_images, output_message]
         )
+        
+        stop_button.click(
+            fn=stop_app,
+            inputs=[],
+            outputs=[output_message]
+        )
+        
         gr.HTML(CONTENT_OUT_1)
-        gr.HTML(CONTENT_OUT_2)
+        
+    return demo
 
-        return demo
-    
 if __name__ == "__main__":
     run_setup_script()
     demo = create_gui()
-    demo.launch(debug=True)
+    demo.launch()
