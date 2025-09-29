@@ -207,60 +207,64 @@ python src/anime_super_resolution/infer.py \
     <th>Image Type</th>
     <th>Image</th>
   </tr>
+
+  <!-- Example 1 -->
   <tr>
-    <td rowspan="2" style="text-align: center;">Ex. 1</td>
-    <td style="text-align: center;">Original Image</td>    
-    <td style="text-align: center;">
+    <th rowspan="2">Ex. 1</th>
+    <th>Original Image</th>    
+    <td>
         <img src="assets/examples/Real-ESRGAN-Anime-finetuning/1/1_zoom.png" alt="Example 1" height="600">
     </td>
   </tr>
   <tr>
-    <!-- <td style="text-align: center;"></td> -->
-    <td style="text-align: center;">Upscaled Image (2x)</td>
-    <td style="text-align: center;">
+    <th>Upscaled Image (2x)</th>
+    <td>
         <img src="assets/examples/Real-ESRGAN-Anime-finetuning/1/1_x2_zoom.png" alt="Example 1" height="600">
     </td>
   </tr>
+
+  <!-- Example 2 -->
   <tr>
-    <td rowspan="2" style="text-align: center;">Ex. 2</td>
-    <td style="text-align: center;">Original Image</td>
-    <td style="text-align: center;">
+    <th rowspan="2">Ex. 2</th>
+    <th>Original Image</th>
+    <td>
         <img src="assets/examples/Real-ESRGAN-Anime-finetuning/2/2_zoom.png" alt="Example 2" height="600">
-    </td>
     </td>
   </tr>
   <tr>
-    <td style="text-align: center;">Upscaled Image (4x)</td>
-    <td style="text-align: center;">
+    <th>Upscaled Image (4x)</th>
+    <td>
         <img src="assets/examples/Real-ESRGAN-Anime-finetuning/2/2_x4_zoom.png" alt="Example 2" height="600">
     </td>
   </tr>
+
+  <!-- Example 3 -->
   <tr>
-    <td rowspan="2" style="text-align: center;">Ex. 3</td>
-    <td style="text-align: center;">Original Image</td>
-    <td style="text-align: center;">
-        <img src="assets/examples/Real-ESRGAN-Anime-finetuning/3/3_zoom.png" alt="Example 2" height="600">
-    </td>
+    <th rowspan="2">Ex. 3</th>
+    <th>Original Image</th>
+    <td>
+        <img src="assets/examples/Real-ESRGAN-Anime-finetuning/3/3_zoom.png" alt="Example 3" height="600">
     </td>
   </tr>
   <tr>
-    <td style="text-align: center;">Upscaled Image (6x)</td>
-    <td style="text-align: center;">
-        <img src="assets/examples/Real-ESRGAN-Anime-finetuning/3/3_x6_zoom.png" alt="Example 2" height="600">
+    <th>Upscaled Image (6x)</th>
+    <td>
+        <img src="assets/examples/Real-ESRGAN-Anime-finetuning/3/3_x6_zoom.png" alt="Example 3" height="600">
+    </td>
+  </tr>
+
+  <!-- Example 4 -->
+  <tr>
+    <th rowspan="2">Ex. 4</th>
+    <th>Original Image</th>
+    <td>
+        <img src="assets/examples/Real-ESRGAN-Anime-finetuning/4/4_zoom.png" alt="Example 4" height="600">
     </td>
   </tr>
   <tr>
-    <td rowspan="2" style="text-align: left;">Ex. 4</td>
-    <td style="text-align: left;">Original Image</td>
-    <td style="text-align: left;">
-        <img src="assets/examples/Real-ESRGAN-Anime-finetuning/4/4_zoom.png" alt="Example 2" height="600">
-    </td>
-    </td>
-  </tr>
-  <tr>
-    <td style="text-align: left;">Upscaled Image (8x)</td>
-    <td style="text-align: left;">
-        <img src="assets/examples/Real-ESRGAN-Anime-finetuning/4/4_x8_zoom.png" alt="Example 2" height="600">
+    <th>Upscaled Image (8x)</th>
+    <td>
+        <img src="assets/examples/Real-ESRGAN-Anime-finetuning/4/4_x8_zoom.png" alt="Example 4" height="600">
     </td>
   </tr>
 </table>
